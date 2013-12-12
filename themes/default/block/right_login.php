@@ -4,17 +4,13 @@
 <table>
 <tr>
 <td valign='top' width='100'>
-<a href="<?php echo site_url('user/info/'.$user['uid']);?>" class="profile_link" title="admin">
-<?php if(!file_exists($user['big_avatar'])){?>
-<img alt="admin large avatar" class="large_avatar" src="<?php echo base_url('uploads/avatar/avatar_large.jpg')?>" />
-<? } else {?>
-<img alt="admin large avatar" class="large_avatar" src="<?php echo base_url($user['big_avatar'])?>" />
-<?}?>
+<a href="<?php echo site_url('user/info/'.$user['uid']);?>" class="profile_link" title="<?php echo $user['username']?>">
+<img alt="<?php echo $user['username']?> large avatar" class="large_avatar" src="<?php echo base_url($user['big_avatar'])?>" />
 </a>
 </td>
 <td valign='top' width='10'></td>
 <td valign='left' width='auto'>
-<div class='profile-link'><a href="<?php echo site_url('user/info/'.$user['uid']);?>" class="startbbs profile_link" title="admin"><?php echo $user['username']?></a></div>
+<div class='profile-link'><a href="<?php echo site_url('user/info/'.$user['uid']);?>" class="startbbs profile_link" title="<?php echo $user['username']?>"><?php echo $user['username']?></a>(<?php echo $group['group_name']?>)</div>
 <div class='signature'></div>
 </td>
 </tr>
@@ -41,30 +37,30 @@
 </div>
 <?php if(!file_exists($user['big_avatar'])){?>
 <div class='cell'>
-<div class='muted alert alert-warn' style='margin-bottom: 0;'>
+<div class='text-muted alert alert-warn' style='margin-bottom: 0;'>
 头像不够个性？
 <a class='startbbs' href='<?php echo site_url('settings/avatar');?>'>立刻上传 →</a>
 </div>
 </div>
-<?}?>
-<div class='inner muted'>
+<?php }?>
+<div class='inner text-muted'>
 <?php if($users['notices']){?>
-<img align="top" alt="Dot_orange" class="icon" src="<?php echo base_url('static/images/dot_orange.png');?>" />
+<img align="top" alt="Dot_orange" class="icon" src="<?php echo base_url('static/common/images/dot_orange.png');?>" />
 <a href="<?php echo site_url('notifications');?>"><?php echo $users['notices']?> 条未读提醒</a>
-<?} else{?>
+<?php } else{?>
 暂无提醒
-<?}?>
+<?php }?>
 </div>
 </div>
-<?} else {?>
+<?php } else {?>
 <div class='box'>
 <div class='cell'>
-<?=$settings['site_name']?> — <?=$settings['short_intro']?>
+<?php echo $settings['site_name']?> — <?php echo $settings['short_intro']?>
 </div>
 <div class='inner'>
 <div class='sep5'></div>
 <div class='center'>
-<a href="<?php echo site_url('user/reg');?>" class="btn btn-small">现在注册</a>
+<a href="<?php echo site_url('user/reg');?>" class="btn btn-default">现在注册</a>
 <div class='sep5'></div>
 <div class='sep10'></div>
 已注册用户请
@@ -72,4 +68,4 @@
 </div>
 </div>
 </div>
-<?}?>
+<?php }?>

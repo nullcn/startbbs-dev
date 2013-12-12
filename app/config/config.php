@@ -8,7 +8,8 @@ $config['language']	= 'english';
 $config['charset'] = 'UTF-8';
 $config['enable_hooks'] = FALSE;
 $config['subclass_prefix'] = 'MY_';
-$config['permitted_uri_chars'] = 'a-z 0-9~%.:_\-';
+//$config['permitted_uri_chars'] = 'a-z 0-9~%.:_\-';
+$config['permitted_uri_chars'] = '|^[a-z 0-9~%\.\:_\+\- \x{4e00}-\x{9fa5}]+$|iu';
 $config['allow_get_array']		= TRUE;
 $config['enable_query_strings'] = FALSE;
 $config['controller_trigger']	= 'c';
@@ -18,11 +19,11 @@ $config['log_threshold'] = 0;
 $config['log_path'] = '';
 $config['log_date_format'] = 'Y-m-d H:i:s';
 $config['cache_path'] = '';
-$config['encryption_key'] = '2013#';
+$config['encryption_key'] = '';
 $config['sess_cookie_name']		= 'ci_session';
 $config['sess_expiration']		= 86400;
 $config['sess_expire_on_close']	= FALSE;
-$config['sess_encrypt_cookie']	= FALSE;
+$config['sess_encrypt_cookie']	= TRUE;
 $config['sess_use_database']	= FALSE;
 $config['sess_table_name']		= 'ci_sessions';
 $config['sess_match_ip']		= FALSE;
@@ -50,6 +51,8 @@ $config['rewrite_short_tags'] = true;
 $config['proxy_ips'] = '';
 
 $config['admin_folder']		= 'admin';
+
+$config['time_zone'] = date_default_timezone_get();
 
 /* End of file config.php */
 /* Location: ./application/config/config.php */

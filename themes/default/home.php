@@ -1,16 +1,20 @@
-<!DOCTYPE html><html><head>
-<meta content='StartBBS 是新一代简洁社区软件，让论坛回归交流本质！技术先进，管理方便，深度定制。&#x000A;不喜欢传统论坛？试试StartBBS ！' name='description'>
+<!DOCTYPE html>
+<html>
+<head>
 <meta charset='UTF-8'>
-<meta content='True' name='HandheldFriendly'>
-<meta content='width=device-width, initial-scale=1.0' name='viewport'>
-<title><?php echo $settings['site_name']?> - 让论坛回归交流本质</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title><?php echo $settings['site_name']?> - <?php echo $settings['short_intro']?></title>
+<meta name="keywords" content="<?php echo $settings['site_keywords']?>" />
+<meta name="description" content="<?php echo $settings['short_intro']?>" />
 <?php $this->load->view('header-meta');?>
 </head>
 <body id="startbbs">
 <?php $this->load->view('header');?>
 <div id="wrap">
 <div class="container" id="page-main">
-<div class="row-fluid"><div class='span8'>
+<div class="row">
+
+<div class='col-xs-12 col-sm-6 col-md-8'>
 
 <div class='box' id='topics_index'>
 <div align='left' class='cell'>
@@ -21,7 +25,7 @@
 <div class='bigger welcome'><?php echo $settings['welcome_tip']?></div>
 <?php if(!$this->session->userdata('uid')){?>
 <div class='sep10'></div>
-<div class="hero-unit"><h1>StartBBS</h1><p><?php echo $settings['short_intro']?></p></div>
+<div class="jumbotron"><h1><?php echo $settings['site_name']?></h1><p><?php echo $settings['short_intro']?></p></div>
 <?php }?>
 </div>
 <span id="infolist">
@@ -31,7 +35,7 @@
 <div class='avatar pull-left'>
 <a href="<?php echo site_url('user/info/'.$v['uid']);?>" class="profile_link" title="<?php echo $v['username']?>">
 <?php if($v['avatar']){?>
-<img alt="<?php echo $v['username']?> medium avatar" class="medium_avatar" src="<?php echo base_url();?>/<?php echo $v['avatar'];?>"/>
+<img alt="<?php echo $v['username']?> medium avatar" class="medium_avatar" src="<?php echo base_url($v['avatar']);?>"/>
 <?php } else{?>
 <img alt="<?php echo $v['username']?> medium avatar" class="medium_avatar" src="uploads/avatar/default.jpg" />
 <?php }?>
@@ -39,30 +43,30 @@
 </div>
 <div class='item_title'>
 <div class='pull-right'>
-<div class='badge badge-info'><?php echo $v['comments']?></div>
+<div class='badge badge-info'><a href="<?php echo site_url($v['view_url'].'#reply');?>"><?php echo $v['comments']?></a></div>
 </div>
 <h2 class='topic_title'>
 <a href="<?php echo site_url($v['view_url']);?>" class="startbbs topic"><?php echo sb_substr($v['title'],30);?></a>
-<?php if( $v['is_top'] == '1' ) echo '<span class="label label-info">置顶</span>'; ?>
+<?php if( $v['is_top'] == '1' ) echo '<span class="badge badge-info">置顶</span>'; ?>
 </h2>
 <div class='topic-meta'>
 <a href="<?php echo site_url($v['flist_url']);?>" class="node"><?php echo $v['cname']?></a>
-<span class='muted'>•</span>
+<span class='text-muted'>•</span>
 <a href="<?php echo site_url('user/info/'.$v['uid']);?>" class="dark startbbs profile_link" title="<?php echo $v['username']?>"><?php echo $v['username']?></a>
-<span class='muted'>•</span>
+<span class='text-muted'>•</span>
 <?php echo $this->myclass->friendly_date($v['updatetime'])?>
-<span class='muted'>•</span>
+<span class='text-muted'>•</span>
 <?php if($v['rname']){?>
 最后回复来自
 <a href="<?php echo site_url('user/info/'.$v['ruid']);?>" class="startbbs profile_link" title="<?php echo $v['rname']?>"><?php echo $v['rname']?></a>
-<?} else {?>
+<?php } else {?>
 暂无回复
-<?}?>
+<?php }?>
 </div>
 </div>
 </div>
 <?php } ?>
-<?php } else{?>
+<?php } else {?>
 <div class='cell topic'>
 暂无话题, 请发表话题！
 </div>
@@ -71,7 +75,7 @@
 </span><!--infolist-->
 
 <div class='inner'>
-<div class='pull-right'><img align="absmiddle" alt="Rss" src="<?php echo base_url('static/images/rss.png');?>" />
+<div class='pull-right'><img align="absmiddle" alt="Rss" src="<?php echo base_url('static/common/images/rss.png');?>" />
 <a href="<?php echo site_url('feed/')?>" class="dark" target="_blank">RSS</a>
 </div>
 &nbsp;
@@ -94,7 +98,7 @@ $(function() {
 	var page=2;
 			$("#getmore").click(function() {
 				var data;
-				$.get('home/getmore/'+page,function(data){
+				$.get('<?php echo site_url();?>/home/getmore/'+page,function(data){
 				page++;
 				$("#infolist").append(data);
 				});
@@ -107,30 +111,36 @@ $(function() {
 
 <div class="box">
 <div class='box-header'>
-		话题分类
+		话题节点
 	</div>
-<?php if( ! empty( $catelist[0] ) ){?>
-	<div class="cell">
+<?php if($catelist[0]){?>
+	<div class="inner">
 	<?php foreach ($catelist[0] as $v){?>
-	<dl class="dl-horizontal" style="margin:5px">
-        <dt class="span2 muted"><?php echo $v['cname']?></dt>
-        <dd class="span10">
-        <?php if( ! empty( $catelist[$v['cid']] ) ){ ?>
-        <?php foreach($catelist[$v['cid']] as $c){?>
-			<a href="<?php echo site_url($c['flist_url']);?>" class="startbbs item_node"><?php echo $c['cname']?></a>
-		<?}?>
-		<?}?>
-        </dd>
-	</dl>
-<?}?>
+	<?php if(@$catelist[$v['cid']]){?>
+
+	<ul class="list-inline">
+		<li class="test-muted"><?php echo $v['cname']?></li>
+		<?php foreach(@$catelist[$v['cid']] as $c){?>
+  		<li class="btn btn-default"><a href="<?php echo site_url($c['flist_url']);?>" class="startbbs"><?php echo $c['cname']?></a></li>
+  		<?php }?>
+	</ul>
+	<?php } else {?>
+	<ul class="list-inline">
+		<?php foreach((array)@$catelist[$v['cid']] as $c){?>
+  		<li class="tags"><a href="<?php echo site_url($v['flist_url']);?>" class="startbbs btn btn-default"><?php echo $v['cname']?></a></li>
+  		<?php }?>
+	</ul>
+	<?php }?>
+<?php }?>
 	</div>
-<?}?>
+<?php }?>
 
 </div>
 
 
 </div>
-<div class='span4' id='Rightbar'>
+
+<div class='col-xs-6 col-md-4' id='Rightbar'>
 <?php $this->load->view('block/right_login');?>
 <?php $this->load->view('block/right_tags');?>
 
@@ -142,7 +152,7 @@ $(function() {
 <table border='0' cellpadding='3' cellspacing='0' width='100%'>
 <?php if($total_users>0){?>
 <tr>
-<td align='right' width='60'>
+<td align='right' width='70'>
 <span class='gray'>最新会员</span>
 </td>
 <td align='left'>
@@ -151,7 +161,7 @@ $(function() {
 </tr>
 <?php }?>
 <tr>
-<td align='right' width='60'>
+<td align='right' width='70'>
 <span class='gray'>注册会员</span>
 </td>
 <td align='left'>
@@ -159,7 +169,7 @@ $(function() {
 </td>
 </tr>
 <tr>
-<td align='right' width='60'>
+<td align='right' width='70'>
 <span class='gray'>今日话题</span>
 </td>
 <td align='left'>
@@ -167,7 +177,7 @@ $(function() {
 </td>
 </tr>
 <tr>
-<td align='right' width='60'>
+<td align='right' width='70'>
 <span class='gray'>话题总数</span>
 </td>
 <td align='left'>
@@ -193,8 +203,8 @@ $(function() {
 <div class='box-header'>
 友情链接
 </div>
-<div class='inner'>
-<ul class="unstyled">
+<div class="inner">
+<ul class="list_unstyled">
 <li style="width:0; height:0; overflow:hidden;"><a href="http://www.startbbs.com" target="_blank">StartBBS</a></li>
 <?php if($links){?>
 <?php foreach($links as $v){?>

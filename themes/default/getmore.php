@@ -19,17 +19,17 @@
 </h2>
 <div class='topic-meta'>
 <a href="<?php echo site_url($v['flist_url']);?>" class="node"><?php echo $v['cname']?></a>
-<span class='muted'>•</span>
+<span class='text-muted'>•</span>
 <a href="<?php echo site_url('user/info/'.$v['uid']);?>" class="dark startbbs profile_link" title="<?php echo $v['username']?>"><?php echo $v['username']?></a>
-<span class='muted'>•</span>
+<span class='text-muted'>•</span>
 <?php echo $this->myclass->friendly_date($v['updatetime'])?>
-<span class='muted'>•</span>
+<span class='text-muted'>•</span>
 <?php if($v['rname']){?>
 最后回复来自
 <a href="<?php echo site_url('user/info/'.$v['ruid']);?>" class="startbbs profile_link" title="<?php echo $v['rname']?>"><?php echo $v['rname']?></a>
-<?} else {?>
+<?php } else {?>
 暂无回复
-<?}?>
+<?php }?>
 </div>
 </div>
 </div>

@@ -15,6 +15,7 @@ class Forum_m extends SB_Model
 	{
 		parent::__construct();
 		$this->load->library('myclass');
+		
 	}
 
 	/*
@@ -47,6 +48,7 @@ class Forum_m extends SB_Model
 		if($cid!=0){
 			$this->db->where('a.cid',$cid);
 		}
+		$this->db->where('a.is_hidden',0);
 		$this->db->order_by('ord','desc');
 		$this->db->limit($limit,$page);
 		$query = $this->db->get();
@@ -58,7 +60,7 @@ class Forum_m extends SB_Model
 	/**/
 	public function get_forums_list_by_cids ($limit, $cids)
 	{
-		$sql="SELECT * from ( SELECT `a`.`fid`, `a`.`title`, `a`.`cid`, `a`.`updatetime`, `b`.`uid`, `b`.`username` FROM (`{$this->db->dbprefix}forums` a) LEFT JOIN `{$this->db->dbprefix}users` b ON `b`.`uid` = `a`.`uid` WHERE `cid` IN ({$cids}) ORDER BY `a`.`updatetime` DESC LIMIT {$limit} ) alias GROUP BY cid";
+		$sql="SELECT * from ( SELECT `a`.`fid`, `a`.`title`, `a`.`cid`, `a`.`updatetime`, `b`.`uid`, `b`.`username` FROM (`{$this->db->dbprefix}forums` a) LEFT JOIN `{$this->db->dbprefix}users` b ON `b`.`uid` = `a`.`uid` WHERE `cid` IN ({$cids}) ORDER BY `a`.`updatetime` DESC LIMIT {$limit}) alias GROUP BY cid";
 $query=$this->db->query($sql);
 		//备用
 		//$this->db->select('a.fid,a.title,a.cid,a.updatetime,b.uid,b.username');
@@ -84,6 +86,7 @@ $query=$this->db->query($sql);
 	{
 		$this->db->select('fid,title,updatetime');
 		$this->db->from('forums');
+		$this->db->where('is_hidden',0);
 		$this->db->order_by('updatetime','desc');
 		$this->db->limit($limit);
 		$query = $this->db->get();
@@ -100,6 +103,7 @@ $query=$this->db->query($sql);
 		$this->db->join('users b','b.uid = forums.uid','left');
 		$this->db->join('users c','c.uid = forums.ruid','left');
 		$this->db->join('categories d','d.cid = forums.cid','left');
+		$this->db->where('forums.is_hidden',0);
 		$this->db->order_by('ord','desc');
 		$this->db->limit($limit);
 		$query = $this->db->get();
@@ -127,6 +131,7 @@ $query=$this->db->query($sql);
 		$this->db->select('forums.*, b.username as rname,c.cname');
 		$this->db->from('forums');
 		$this->db->where('forums.uid',$uid);
+		$this->db->where('forums.is_hidden',0);
 		$this->db->join('users b', 'b.uid= forums.ruid','left');
 		$this->db->join('categories c','c.cid = forums.cid','left');
 		$this->db->limit($num);
@@ -150,7 +155,7 @@ $query=$this->db->query($sql);
 	}
 	public function get_all_forums($page, $limit)
 	{
-		$this->db->select('a.fid, a.title, a.addtime, a.views, a.uid, a.comments, a.is_top, b.cname, b.cid, c.username');
+		$this->db->select('a.fid, a.title, a.addtime, a.views, a.uid, a.comments, a.is_top, a.is_hidden, b.cname, b.cid, c.username');
 		$this->db->from('forums a');
 		$this->db->join('categories b','b.cid = a.cid');
 		$this->db->join('users c', 'c.uid = a.uid');

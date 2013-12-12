@@ -3,9 +3,9 @@
 -- http://www.phpmyadmin.net
 --
 -- 主机: localhost
--- 生成日期: 2013 年 05 月 11 日 00:14
+-- 生成日期: 2013 年 09 月 15 日 15:36
 -- 服务器版本: 5.1.50-community-log
--- PHP 版本: 5.2.17
+-- PHP 版本: 5.4.12
 
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -34,6 +34,8 @@ CREATE TABLE IF NOT EXISTS `sb_categories` (
   `content` varchar(255) DEFAULT NULL,
   `keywords` varchar(255) DEFAULT NULL,
   `ico` varchar(128) DEFAULT NULL,
+  `master` varchar(100) NOT NULL,
+  `permit` varchar(255) DEFAULT NULL,
   `listnum` mediumint(8) unsigned DEFAULT '0',
   `clevel` varchar(25) DEFAULT NULL,
   `cord` smallint(6) DEFAULT NULL,
@@ -95,25 +97,11 @@ CREATE TABLE IF NOT EXISTS `sb_forums` (
   `favorites` int(10) unsigned DEFAULT '0',
   `closecomment` tinyint(1) DEFAULT NULL,
   `is_top` tinyint(1) NOT NULL DEFAULT '0',
+  `is_hidden` tinyint(1) NOT NULL DEFAULT '0',
   `ord` int(10) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`fid`,`cid`,`uid`),
   KEY `updatetime` (`updatetime`),
   KEY `ord` (`ord`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
-
--- --------------------------------------------------------
-
---
--- 表的结构 `sb_groups`
---
-
-DROP TABLE IF EXISTS `sb_groups`;
-CREATE TABLE IF NOT EXISTS `sb_groups` (
-  `gid` int(11) NOT NULL AUTO_INCREMENT,
-  `type` tinyint(3) NOT NULL DEFAULT '0',
-  `group_name` varchar(50) DEFAULT NULL,
-  `usernum` int(11) NOT NULL,
-  PRIMARY KEY (`gid`,`type`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -198,12 +186,12 @@ INSERT INTO `sb_settings` (`id`, `title`, `value`, `type`) VALUES
 (3, 'short_intro', '新一代简洁社区软件', 0),
 (4, 'show_captcha', 'on', 0),
 (5, 'site_run', '0', 0),
-(6, 'site_stats', '0', 0),
+(6, 'site_stats', '统计代码', 0),
 (7, 'site_keywords', '轻量 •  易用  •  社区系统', 0),
-(8, 'site_description', '测试一下', 0),
-(9, 'money_title', '0', 0),
-(10, 'per_page_num', '0', 0),
-(11, 'is_rewrite', 'on', 0),
+(8, 'site_description', 'Startbbs', 0),
+(9, 'money_title', '银币', 0),
+(10, 'per_page_num', '20', 0),
+(11, 'is_rewrite', 'off', 0),
 (12, 'show_editor', 'off', 0),
 (13, 'comment_order', 'desc', 0);
 
@@ -258,16 +246,17 @@ CREATE TABLE IF NOT EXISTS `sb_users` (
   `notices` smallint(5) DEFAULT '0',
   `follows` int(11) NOT NULL DEFAULT '0',
   `regtime` int(10) DEFAULT NULL,
-  `lastlogin` int(10) NOT NULL,
+  `lastlogin` int(10) DEFAULT NULL,
   `lastpost` int(10) DEFAULT NULL,
   `qq` varchar(20) DEFAULT NULL,
-  `gid` tinyint(3) NOT NULL DEFAULT '0',
+  `group_type` tinyint(3) NOT NULL DEFAULT '0',
+  `gid` tinyint(3) NOT NULL DEFAULT '3',
   `ip` char(15) DEFAULT NULL,
   `location` varchar(128) DEFAULT NULL,
   `token` varchar(40) DEFAULT NULL,
   `introduction` text,
   `is_active` tinyint(1) NOT NULL DEFAULT '1',
-  PRIMARY KEY (`uid`,`gid`)
+  PRIMARY KEY (`uid`,`group_type`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -284,6 +273,30 @@ CREATE TABLE IF NOT EXISTS `sb_user_follow` (
   `addtime` int(10) NOT NULL DEFAULT '0',
   PRIMARY KEY (`follow_id`,`uid`,`follow_uid`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `sb_user_groups`
+--
+
+DROP TABLE IF EXISTS `sb_user_groups`;
+CREATE TABLE IF NOT EXISTS `sb_user_groups` (
+  `gid` int(11) NOT NULL AUTO_INCREMENT,
+  `group_type` tinyint(3) NOT NULL DEFAULT '0',
+  `group_name` varchar(50) DEFAULT NULL,
+  `usernum` int(11) NOT NULL,
+  PRIMARY KEY (`gid`,`group_type`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=4 ;
+
+--
+-- 转存表中的数据 `sb_user_groups`
+--
+
+INSERT INTO `sb_user_groups` (`gid`, `group_type`, `group_name`, `usernum`) VALUES
+(1, 0, '管理员', 1),
+(2, 1, '版主', 0),
+(3, 2, '普通会员', 0);
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

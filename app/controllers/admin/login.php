@@ -9,8 +9,8 @@ class Login extends Admin_Controller
 
 	public function index()
 	{
-		$data['title'] = '管理后台';
-		//统计
+		$data['title'] = '绠＄悊鍚庡彴';
+		//缁熻
 		$data['total_forums']=$this->db->count_all('forums');
 		$data['total_comments']=$this->db->count_all('comments');
 		$data['total_users']=$this->db->count_all('users');

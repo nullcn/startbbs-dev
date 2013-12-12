@@ -18,14 +18,15 @@ class Tag extends SB_Controller
 
 	public function index($tag_title,$page=1)
 	{
+
 		$data['title'] = urldecode($tag_title);
 		//分页
 		$limit = 10;
-		$config['uri_segment'] = 3;
+		$config['uri_segment'] = 4;
 		$config['use_page_numbers'] = TRUE;
-		$config['base_url'] = site_url('tag/show');
-		$data['tag']=$this->db->select('forums')->get('tags')->row_array();
-		$config['total_rows'] = $data['tag']['forums'];
+		$config['base_url'] = site_url('tag/index/'.$data['title']);
+		$data['tag']=$this->db->select('forums')->where('tag_title',$data['title'])->get('tags')->row_array();
+		$config['total_rows'] = @$data['tag']['forums'];
 		$config['per_page'] = $limit;
 		$config['first_link'] ='首页';
 		$config['last_link'] ='尾页';
@@ -41,14 +42,17 @@ class Tag extends SB_Controller
 		$data['pagination'] = $this->pagination->create_links();
 
 		$data['tag_list'] = $this->tag_m->get_tag_forums_list($start, $limit, $data['title']);
-		//echo var_export($data['tag_list']);
-		$view_url=array_keys($this->router->routes,'forum/view/$1');
-		foreach($data['tag_list'] as $k=>$v)
-		{
-			$data['tag_list'][$k]['view_url']=str_replace('(:num)',$v['fid'],$view_url[0]);
+		if($data['tag_list']){
+			$view_url=array_keys($this->router->routes,'forum/view/$1');
+			foreach($data['tag_list'] as $k=>$v)
+			{
+				$data['tag_list'][$k]['view_url']=str_replace('(:num)',$v['fid'],$view_url[0]);
+			}
+			
+			$this->load->view('tag',$data);
+		} else {
+			$this->myclass->notice('alert("标签不存在");window.location.href="'.site_url('/').'";');
 		}
-		
-		$this->load->view('tag',$data);
 
 	}
 

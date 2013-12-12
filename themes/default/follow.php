@@ -12,8 +12,8 @@
 
 <div id="wrap">
 <div class="container" id="page-main">
-<div class="row-fluid">
-<div class='span8'>
+<div class="row">
+<div class='col-xs-12 col-sm-6 col-md-8'>
 
 <div class='box'>
 <div class='box-header'>
@@ -27,19 +27,19 @@
 <div class='thumbnail'>
 <a href="<?php echo site_url('user/info/'.$v['follow_uid']);?>" title="<?php echo $v['username']?>">
 <?php if($v['avatar']){?>
-<img alt="<?php echo $v['username']?> large avatar" class="large_avatar" src="<?php echo $v['avatar']?>" />
-<?} else{?>
+<img alt="<?php echo $v['username']?> large avatar" class="large_avatar" src="<?php echo base_url($v['avatar'])?>" />
+<?php } else{?>
 <img alt="<?php echo $v['username']?> large avatar" class="large_avatar" src="<?php echo base_url('uploads/avatar/default.jpg');?>" />
-<?}?>
+<?php }?>
 </a></div>
 <div class='sep5'></div>
 <div class='caption center'>
 <?php echo $v['username']?>
 </div>
 </li>
-<?}}else{?>
+<?php }}else{?>
 暂无关注会员
-<?}?>
+<?php }?>
 </ul>
 </div>
 </div>
@@ -56,7 +56,7 @@
 <?php if($v['avatar']) {?>
 <img alt="<?php echo $v['username'];?> medium avatar" class="medium_avatar" src="<?php echo base_url($v['avatar']);?>" />
 <?php } else {?>
-<img alt="<?php echo $v['username'];?> medium avatar" class="medium_avatar" src="<?echo base_url('uploads/avatar/default.jpg');?>" />
+<img alt="<?php echo $v['username'];?> medium avatar" class="medium_avatar" src="<?php echo base_url('uploads/avatar/default.jpg');?>" />
 <?php }?>
 </a>
 </div>
@@ -69,22 +69,22 @@
 </h2>
 <div class='topic-meta'>
 <a href="<?php echo site_url('user/info/'.$v['uid']);?>" class="dark startbbs profile_link" title="<?php echo $v['username'];?>"><?php echo $v['username'];?></a>
-<span class='muted'>•</span>
+<span class='text-muted'>•</span>
 <?php echo $this->myclass->friendly_date($v['updatetime']);?>
-<span class='muted'>•</span>
+<span class='text-muted'>•</span>
 最后回复来自
 <a href="<?php echo site_url('user/info/'.$v['ruid']);?>" class="startbbs profile_link" title="doudou"><?php echo $v['rname'];?></a>
 </div>
 </div>
 </div>
-<?}?>
-<?} else{?>
+<?php }?>
+<?php } else{?>
 <div class='cell'>暂无提醒</div>
-<?}?>
+<?php }?>
 </div>
 
 </div>
-<div class='span4' id='Rightbar'>
+<div class='col-xs-6 col-md-4' id='Rightbar'>
 <?php $this->load->view('block/right_login');?>
 
 <?php $this->load->view('block/right_ad');?>

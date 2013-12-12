@@ -3,7 +3,7 @@
 #doc
 #	classname:	Cate_m
 #	scope:		PUBLIC
-#	StartBBSÆğµãÇáÁ¿¿ªÔ´ÉçÇøÏµÍ³
+#	StartBBSèµ·ç‚¹è½»é‡å¼€æºç¤¾åŒºç³»ç»Ÿ
 #	author :doudou QQ:858292510 startbbs@126.com
 #	Copyright (c) 2013 http://www.startbbs.com All rights reserved.
 #/doc
@@ -25,7 +25,7 @@ class Cate_m extends SB_Model
 	}
 	public function get_all_cates ()
 	{
-		$this->db->select('cid,pid,cname,content,listnum');
+		$this->db->select('cid,pid,cname,content,listnum,master');
 		$this->db->order_by('pid', 'desc');
 		$query=$this->db->get('categories')->result_array();
 		$flist_url=array_keys($this->router->routes,'forum/flist/$1');

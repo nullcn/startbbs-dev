@@ -3,7 +3,7 @@
 
 //mailset
 $config = array (
-  'protocol' => '',//邮件方式
+  'protocol' => 'smtp',//邮件方式
   'smtp_host' => '',//设置 SMTP 服务器的地址
   'smtp_port' => '',//设置 SMTP 服务器的端口，默认为 25
   'smtp_user' => '',//发信人邮件地址。

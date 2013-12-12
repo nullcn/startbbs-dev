@@ -38,13 +38,19 @@ class SB_Controller extends Base_Controller
 	function __construct(){
 		
 		parent::__construct();
+
+		//判断关闭
+		if($this->config->item('site_close')=='off'){
+			show_error($this->config->item('site_close_msg'),500,'网站关闭');
+		}		
 		//载入前台模板
-		$this->load->set_front_theme('default');
+		$this->load->set_front_theme($this->config->item('themes'));
 		//判断安装
 		$file=FCPATH.'install.lock';
 		if (!is_file($file)){
 			redirect(site_url('install'));
 		}
+
 		$this->load->database();
 	 	//网站设定
 		$data['items']=$this->db->get('settings')->result_array();
@@ -58,15 +64,23 @@ class SB_Controller extends Base_Controller
 			'site_keywords'=>$data['items'][6]['value'],
 			'site_description'=>$data['items'][7]['value'],
 			'money_title'=>$data['items'][8]['value'],
-			'per_page_num'=>$data['items'][9]['value']
+			'per_page_num'=>$data['items'][9]['value'],
+			'logo'=>$this->config->item('logo')
 		 );
+		 
 		 //取一个用户信息
 		$data['user']=$this->db->select('uid,username,avatar')->where('uid',$this->session->userdata('uid'))->get('users')->row_array();
+		//一个用户的用户组
+		$data['group'] = $this->db->select('group_name')->get_where('user_groups',array('gid'=>$this->session->userdata('gid')))->row_array();
+		$data['group']['group_name']=($data['group'])?$data['group']['group_name']:'普通会员';
 		//获取二级目录
 		$data['base_folder'] = $this->config->item('base_folder');
 		//获取头像
 		$this->load->model('upload_m');
 		$data['user']['big_avatar']=$this->upload_m->get_avatar_url($this->session->userdata('uid'), 'big');
+		$data['user']['big_avatar']=(file_exists($data['user']['big_avatar']))?$data['user']['big_avatar']:'uploads/avatar/avatar_large.jpg';
+		$data['user']['middle_avatar']=$this->upload_m->get_avatar_url($this->session->userdata('uid'), 'middle');
+		$data['user']['middle_avatar']=(file_exists($data['user']['middle_avatar']))?$data['user']['middle_avatar']:'uploads/avatar/default.jpg';
 		//获取分类
 		$this->load->model('cate_m');
 		$data['catelist'] =$this->cate_m->get_all_cates();
@@ -88,13 +102,15 @@ class SB_Controller extends Base_Controller
 		//底部菜单(单页面)
 		$this->load->model('page_m');
 		$data['page_links'] = $this->page_m->get_page_menu(10,0);
+
+		//模板目录
+		$data['themes']=base_url('static/'.$this->config->item('themes').'/');
 		
 		//全局输出
 		$this->load->vars($data);
 
 /*		//load GoCart library
 		$this->load->library('Go_cart');
-
 		//load needed models
 		$this->load->model(array('Page_model', 'Product_model', 'Digital_Product_model', 'Gift_card_model', 'Option_model', 'Order_model', 'Settings_model'));
 		
@@ -118,8 +134,7 @@ class SB_Controller extends Base_Controller
 		
 		//load the theme package
 		$this->load->add_package_path(APPPATH.'themes/'.$this->config->item('theme').'/');*/
-	}
-	
+	}	
 	/*
 	This works exactly like the regular $this->load->view()
 	The difference is it automatically pulls in a header and footer.
@@ -161,12 +176,14 @@ class SB_Controller extends Base_Controller
 
 }
 
+
 class Admin_Controller extends Base_Controller 
 {
 	function __construct()
 	{
 		
 		parent::__construct();
+		
 		$this->load->database();
 		//载入后台模板
 		$this->load->set_admin_theme();
@@ -188,13 +205,13 @@ class Admin_Controller extends Base_Controller
 		/** 加载验证库 */
 		$this->load->library('auth');
 		/** 检查登陆 */	
-		$gid = $this->session->userdata('gid');
+		$group_type = $this->session->userdata('group_type');
+		$this->load->library('myclass');
 		if(!$this->auth->is_login())
 		{
-			echo "请登录";
+			$this->myclass->notice('alert("管理员未登录或非管理员");window.location.href="'.site_url('user/login').'";');
 			exit;
 		}
-		$this->load->library('myclass');
 		if(!$this->auth->is_admin())
 		{
 			$this->myclass->notice('alert("无权访问此页");window.location.href="/";');

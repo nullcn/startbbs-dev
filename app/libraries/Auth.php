@@ -95,9 +95,20 @@ class Auth
      */
 	public function is_admin()
 	{
-		$gid=$this->_CI->session->userdata('gid');
+		$group_type=$this->_CI->session->userdata('group_type');
 		/** 权限验证通过 */
-        return ($gid!='' && $gid==0)? TRUE : FALSE;
+        return ($this->is_login() && $group_type!='' && $group_type==0)? TRUE : FALSE;
+	}
+
+	public function is_master($cid)
+	{
+		$query = $this->_CI->db->select('master')->get_where('categories', array('cid'=>$cid))->row_array();
+		$data = explode(',',@$query['master']);
+		//return var_dump($data);
+		$username=$this->_CI->session->userdata('username');
+		$group_type=$this->_CI->session->userdata('group_type');
+		/** 权限验证通过 */
+        return ($this->is_login() && in_array($username, $data) && $group_type==1)? TRUE : FALSE;
 	}
 
 	public function is_user($uid)
@@ -109,6 +120,20 @@ class Auth
 			return FALSE;
 		}
 		//return ($this->is_login() && $uid==$this->_CI->session->userdata('uid')) ? TRUE : FALSE;
+	}
+
+	public function user_permit($cid)
+	{
+		$query = $this->_CI->db->select('permit')->get_where('categories', array('cid'=>$cid))->row_array();
+		if(@$query['permit']){
+			$data = explode(',',$query['permit']);
+			$gid=$this->_CI->session->userdata('gid');
+			/** 权限验证通过 */
+	        return ($this->is_login() && in_array($gid, $data))? TRUE : FALSE;	
+		} else{
+			return TRUE;
+		}
+
 	}
 	
 	 /**

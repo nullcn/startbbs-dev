@@ -22,37 +22,35 @@ class Section extends SB_Controller
 		$data['total_forums']=$this->db->count_all('forums');
 		//获取版块列表
 		$data['catelist'] = $this->cate_m->get_all_cates();
-		//echo var_export($data['catelist']);
 
 		//获取cids数据
 		if($data['catelist'])
 		foreach($data['catelist'] as $k=>$v){
 			$c[$k]=$v;
 			foreach($c[$k] as $k1=>$d){
-				if($d['pid'] != 0)
+				//if($d['pid'] != 0)
 				$cids[]=$d['cid'];
 				$data['today_forums'][$d['cid']][]=$this->forum_m->today_forums_count($d['cid']);
 			}
-		}	
+		}
+		//echo var_dump(@$cids);
 
 		if(@$cids){
 			$num = count(@$cids);
 			$cids = implode(',',@$cids);//原生态的sql时用到
-			$data['new_forums']= $this->forum_m->get_forums_list_by_cids($num,@$cids);
+			
+			$data['forum_list']= $this->forum_m->get_forums_list_by_cids($num,@$cids);
 			
 			//echo var_export($data['new_forums']);
 			//echo $this->db->last_query();
-			if($data['new_forums'])
-			foreach( $data['new_forums'] as $v )
+			if($data['forum_list'])
+			foreach( $data['forum_list'] as $v )
 			{
 				$data['new_forum'][$v['cid']][]=$v;
 				
 			}
 		}
 
-
-		
-		//echo var_export($data['new_forum']);
 		
 		//for ($i=0 ; $i<$num; $i++){
 			//$data['today_forums'][$i]=$this->forum_m->today_forums_count(@$cids[$i]);
@@ -68,7 +66,7 @@ class Section extends SB_Controller
 
 
 		//最新会员列表
-		$data['new_users'] = $this->user_m->get_new_users(15);
+		$data['new_users'] = $this->user_m->get_users(15,'new');
 		//最新贴子列表
 		$data['new_forums'] = $this->forum_m->get_latest_forums(10);
 

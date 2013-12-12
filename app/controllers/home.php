@@ -12,6 +12,7 @@ class Home extends SB_Controller
 	function __construct ()
 	{
 		parent::__construct();
+
 		$this->load->model('forum_m');
 		$this->load->model('cate_m');
 		$this->load->library('myclass');
@@ -20,14 +21,13 @@ class Home extends SB_Controller
 	}
 	public function index ()
 	{
-
 		//获取列表
 		$data['view_url']=array_keys($this->router->routes,'forum/view/$1');
 		$data['flist_url']=array_keys($this->router->routes,'forum/flist/$1');
 		//echo $this->router->routes['admin'];
 		//echo var_export($this->router->routes);
 
-		$data['list'] = $this->forum_m->get_forums_list_nopage(10);
+		$data['list'] = $this->forum_m->get_forums_list_nopage($this->config->item('per_page_num'));
 		if(is_array($data['list']))
 		foreach($data['list'] as $k=>$v)
 		{
@@ -39,6 +39,7 @@ class Home extends SB_Controller
 		
 		
 		$data['catelist'] =$this->cate_m->get_all_cates();
+		//echo var_dump($data['catelist']);
 
 		$this->db->cache_on();
 		$data['total_forums']=$this->db->count_all('forums');
@@ -53,10 +54,11 @@ class Home extends SB_Controller
 		$data['taglist'] = $this->tag_m->get_latest_tags(15);
 
 		//links
-		$data['links']=$this->link_m->get_latest_links(10);
+		$data['links']=$this->link_m->get_latest_links();
 
 		
 		$this->load->view('home',$data);
+
 	}
 	public function latest()
 	{
@@ -73,7 +75,7 @@ class Home extends SB_Controller
 	public function getmore ($page=1)
 	{
 		//分页
-		$limit = 10;
+		$limit = 20;
 		$config['uri_segment'] = 3;
 		$config['use_page_numbers'] = TRUE;
 		$config['base_url'] = site_url('home/getmore/'.$page);
@@ -104,8 +106,6 @@ class Home extends SB_Controller
 		}
 		
 		//$data['category'] = $this->cate_m->get_category_by_cid($cid);
-
-
 		$this->load->view('getmore', $data);
 	}
 

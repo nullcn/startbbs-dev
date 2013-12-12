@@ -20,11 +20,18 @@ class Comment_m extends SB_Model
 	{
 		$this->db->insert('comments', $data);
 	}
-	function get_comment($fid,$order='desc'){
+	
+	function get_comment($page,$limit,$fid,$order='desc'){
 		$this->db->select('comments.*, u.uid, u.username, u.avatar, u.signature');
-		$query=$this->db->from('comments')->where('fid',$fid)->join ( 'users u', "u.uid=comments.uid" )->order_by('comments.replytime',$order)->get();
+		$query=$this->db->from('comments')
+		->where('fid',$fid)
+		->join ( 'users u', "u.uid=comments.uid" )
+		->order_by('comments.replytime',$order)
+		->limit($limit,$page)
+		->get();
 		return $query->result_array();
 	}
+	
 	public function get_comments_by_uid($uid,$num)
 	{
 		$this->db->select('c.*, f.fid, f.title, f.addtime, u.uid, u.username');
@@ -37,6 +44,7 @@ class Comment_m extends SB_Model
 		$query = $this->db->get();
 		return $query->result_array();
 	}
+	
 	function del_comments_by_fid($fid,$uid)
 	{
 		$this->db->where('fid', $fid)->delete('comments');
@@ -45,6 +53,10 @@ class Comment_m extends SB_Model
 		$replies = $this->db->select('replies')->get_where('users', array('uid'=>$uid))->row_array();
 		$this->db->where('uid',$uid)->update('users',array('replies'=>$replies['replies']-$rnum));
 		return ($this->db->affected_rows() > 0) ? TRUE : FALSE;
+	}
+	public function today_forums_count($cid)
+	{
+		# code...
 	}
 }
 

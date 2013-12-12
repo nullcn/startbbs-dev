@@ -12,8 +12,8 @@
 
 <div id="wrap">
 <div class="container" id="page-main">
-<div class="row-fluid">
-<div class='span8'>
+<div class="row">
+<div class='col-xs-12 col-sm-6 col-md-8'>
 
 <div class='box'>
 <div class='inner'>
@@ -29,7 +29,7 @@
 </div>
 
 </div>
-<div class='span4' id='Rightbar'>
+<div class='col-xs-6 col-md-4' id='Rightbar'>
 <?php $this->load->view('block/right_login');?>
 
 <?php $this->load->view('block/right_ad');?>

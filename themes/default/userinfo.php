@@ -12,7 +12,7 @@
 <?php echo $this->load->view('header')?>
 <div id="wrap">
 <div class="container" id="page-main">
-<div class="row-fluid"><div class='span8'>
+<div class="row"><div class='col-xs-12 col-sm-6 col-md-8'>
 <div class='box'>
 <div class='cell'>
 <table border='0' cellpadding='0' cellspacing='0' width='100%'>
@@ -26,15 +26,15 @@
 </td>
 <td valign='top' width='10'></td>
 <td align='left' valign='top' width='auto'>
-<div class='fr'>
+<div class='pull-right'>
 <div class='sep3'></div>
 <?php if($this->session->userdata('uid')){?>
 <?php if(!$is_followed){?>
-<a href="<?php echo site_url('follow/add/'.$uid);?>" class="btn btn-small btn-inverse follow" data-method="post" rel="nofollow">加入特别关注</a>
-<?}else{?>
-<a href="<?php echo site_url('follow/cancel/'.$uid);?>" class="btn btn-small btn-warning unfollow" data-method="post" rel="nofollow">取消特别关注</a>
-<?}?>
-<?}?>
+<a href="<?php echo site_url('follow/add/'.$uid);?>" class="btn btn-info btn-sm" data-method="post" rel="nofollow">加入特别关注</a>
+<?php }else{?>
+<a href="<?php echo site_url('follow/cancel/'.$uid);?>" class="btn btn-sm btn-warning" data-method="post" rel="nofollow">取消特别关注</a>
+<?php }?>
+<?php }?>
 </div>
 <h2 style='padding: 0px; margin: 0px; font-size: 22px; line-height: 22px;'>
 <?php echo $username?>
@@ -108,17 +108,17 @@
 </div>
 </td>
 <td align='right' valign='middle' width='40'>
-<div class='badge badge-info'><?php echo $v['views']?></div>
+<div class='badge badge-info'><?php echo $v['comments']?></div>
 </td>
 </tr>
 </table>
 </div>
-<? } ?>
+<?php } ?>
 
-<div class='inner'>
+<!--<div class='inner'>
 <span class='chevron'>»</span>
 <small><a href="/member/admin/topics" class="startbbs"><?php echo $username?> 创建的更多主题</a></small>
-</div>
+</div>-->
 </div>
 <div class='box'>
 <div class='box-header'>
@@ -126,7 +126,7 @@
 最近的回复
 </div>
 <?php foreach($user_comments as $v){?>
-<div class='cell comment_header muted'>
+<div class='cell comment_header text-muted'>
 <div class='pull-right timeago'>
 <?php echo $this->myclass->friendly_date($v['replytime'])?>
 </div>
@@ -142,12 +142,12 @@
 </div>
 </div>
 <div class='sep5'></div>
-<? } ?>
+<?php } ?>
 
 </div>
 
 </div>
-<div class='span4' id='Rightbar'>
+<div class='col-xs-6 col-md-4' id='Rightbar'>
 <?php $this->load->view('/block/right_login')?>
 
 <!--<div class='box'>

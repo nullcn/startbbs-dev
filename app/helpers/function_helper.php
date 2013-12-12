@@ -1,7 +1,7 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 /**
- * ��ȡ��Ӣ�����ַ���
+ * 截取中英混排字符串
  * @param (string) $string
  * @param (int) $length
  * @param (string) $dot
@@ -52,5 +52,177 @@ function sb_substr( $string, $length, $dot = '..', $charset='utf-8' ) {
     return $strcut.$dot;
 }
 
+/**
+ * 清除HTML标记
+ *
+ * @param	string	$str
+ * @return  string
+ */
+function cleanhtml($str)
+{
+	$str = strip_tags($str);
+	$str=preg_replace("/\s+/"," ", $str); //过滤多余回车
+	return $str;
+}
+
+function check_auth()
+{
+	$url = 'http://www.startbbs.com/authorize/check_auth/'.get_domain();
+	if(function_exists('file_get_contents')) {
+		$data=file_get_contents($url);
+	} else {
+		$ch = curl_init();
+		$timeout = 5; 
+		curl_setopt ($ch, CURLOPT_URL, $url);
+		curl_setopt ($ch, CURLOPT_RETURNTRANSFER, 1); 
+		curl_setopt ($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
+		$data = curl_exec($ch);
+		curl_close($ch);
+	}
+	$data = json_decode($data);
+	return $data->product;
+}
+
+function get_domain($url=''){ 
+	$host=$url?$url:@$_SERVER[HTTP_HOST]; 
+	$host=strtolower($host); 
+	if(strpos($host,'/')!==false){ 
+		$parse = @parse_url($host); 
+		$host = $parse['host']; 
+	}
+	$topleveldomaindb=array('com','edu','gov','int','mil','net','org','biz','info','pro','name','museum','coop','aero','xxx','idv','mobi','cc','me','cn','tv','in','hk','de','us','tw');
+	$str=''; 
+	foreach($topleveldomaindb as $v){ 
+		$str.=($str ? '|' : '').$v;
+	} 
+	$matchstr="[^\.]+\.(?:(".$str.")|\w{2}|((".$str.")\.\w{2}))$";
+	if(preg_match("/".$matchstr."/ies",$host,$matchs)){ 
+		$domain=$matchs['0'];
+	}else{ 
+		$domain=$host; 
+	}
+	return $domain; 
+}
+
+	//无编辑器的过滤
+	/*function filter_check ($data)
+	{
+		$pattern="/<pre>(.*?)<\/pre>/si";
+		preg_match_all ($pattern, $data, $matches);
+		foreach( $matches[1] as $val ){
+			@$replace[] = htmlspecialchars($val);
+		}
+		$data = str_replace($matches[1], @$replace, $data);
+		if(!$matches[1]){
+			$data = nl2br($data);
+		}
+		$data = str_replace('</p><br />','</p>',$data);
+		return $data = strip_tags($data,"<p> <font> <img> <b> <strong> <br> <pre> <br /> <span>");
+	}*/
+	//无编辑器的过滤
+	function filter_check ($str)
+	{
+		$pattern="/<pre[^>]*>(.*?)<\/pre>/si";
+		preg_match_all($pattern, $str, $matches);
+		$str=htmlspecialchars_decode($str);
+		$str=stripslashes($str);
+		if($matches[1]){
+			foreach($matches[1] as $v){
+				$replace[]= addslashes(htmlspecialchars(trim($v)));
+			}
+			$str = str_replace($matches[1], $replace, $str);
+		} else{
+			$str=strip_tags($str,"<img> <pre> <a> <font> <span> <em>");
+		}
+		$str = nl2br($str);
+		
+		return $str;
+	}
+
+function send_mail($username,$password,$to,$subject,$message)
+{
+	$ci	= &get_instance();
+	$config['protocol']=$ci->config->item('protocol');
+	$config['smtp_host']=$ci->config->item('smtp_host');
+	$config['smtp_user']=$ci->config->item('smtp_user');
+	$config['smtp_pass']=$ci->config->item('smtp_pass');
+	$config['smtp_port']=$ci->config->item('smtp_port');
+	$config['charset'] = 'utf-8';
+	$config['wordwrap'] = TRUE;
+	$config['mailtype'] = 'html';
+	
+	$ci->load->library('email',$config);
+	$ci->email->from($config['smtp_user'],'');
+	$ci->email->to($to);
+	$ci->email->subject($subject.'-'.$ci->config->item('site_name'));
+	$ci->email->message($message);
+	if($ci->email->send()){
+		return true;
+	} else
+	{
+		return false;
+	}
+}
+
+	function auto_link_pic($str, $type = 'both', $popup = FALSE)
+	{
+		if ($type != 'email')
+		{
+			if (preg_match_all("#(^|\s|\()((http(s?)://)|(www\.))(\w+[^\s\)\<]+)#i", $str, $matches))
+			{
+				$pop = ($popup == TRUE) ? " target=\"_blank\" " : "";
+
+				for ($i = 0; $i < count($matches['0']); $i++)
+				{
+					$period = '';
+					if (preg_match("|\.$|", $matches['6'][$i]))
+					{
+						$period = '.';
+						$matches['6'][$i] = substr($matches['6'][$i], 0, -1);
+					}
+					$img_ext = array('jpg','png','gif','jpeg');
+					$file_ext=strtolower(end(explode(".",$matches['0'][$i])));
+					if(in_array($file_ext,$img_ext)){
+						$str = str_replace($matches['0'][$i],
+											$matches['1'][$i].'<img src="http'.
+											$matches['4'][$i].'://'.
+											$matches['5'][$i].
+											$matches['6'][$i].'" alt="">'.
+											$period, $str);
+					} else {
+						$str = str_replace($matches['0'][$i],
+											$matches['1'][$i].'<a href="http'.
+											$matches['4'][$i].'://'.
+											$matches['5'][$i].
+											$matches['6'][$i].'"'.$pop.'>http'.
+											$matches['4'][$i].'://'.
+											$matches['5'][$i].
+											$matches['6'][$i].'</a>'.
+											$period, $str);
+					}
+				}
+			}
+		}
+
+		if ($type != 'url')
+		{
+			if (preg_match_all("/([a-zA-Z0-9_\.\-\+]+)@([a-zA-Z0-9\-]+)\.([a-zA-Z0-9\-\.]*)/i", $str, $matches))
+			{
+				for ($i = 0; $i < count($matches['0']); $i++)
+				{
+					$period = '';
+					if (preg_match("|\.$|", $matches['3'][$i]))
+					{
+						$period = '.';
+						$matches['3'][$i] = substr($matches['3'][$i], 0, -1);
+					}
+
+					$str = str_replace($matches['0'][$i], safe_mailto($matches['1'][$i].'@'.$matches['2'][$i].'.'.$matches['3'][$i]).$period, $str);
+				}
+			}
+		}
+
+		return $str;
+	}
 /* End of file function_helper.php */
 /* Location: ./system/helpers/function_helper.php */

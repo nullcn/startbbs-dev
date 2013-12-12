@@ -787,7 +787,7 @@
 	filter:alpha(opacity=50);
 	opacity:0.5;
 }
-.ke-button-common {
+/*.ke-button-common {
 	background: url(background.png) no-repeat scroll 0 -25px transparent;
 	cursor: pointer;
 	height: 23px;
@@ -796,7 +796,7 @@
 	display: inline-block;
 	vertical-align: top;
 	cursor: pointer;
-}
+}*/
 .ke-button-outer {
 	background-position: 0 -25px;
 	padding: 0;
@@ -808,16 +808,18 @@
 	*display: inline;
 }
 .ke-button {
-	background-position: right -25px;
-	padding: 0 12px;
+	/*background-position: right -25px;*/
+	/*padding: 0 12px;*/
+	background: #fff;
 	margin: 0;
 	font-family: "sans serif",tahoma,verdana,helvetica;
 	border: 0 none;
 	color: #333;
-	font-size: 12px;
-	left: 2px;
+	font-size: 14px;
+	/*left: 2px;*/
 	text-decoration: none;
 }
+
 /* inputbox */
 .ke-input-text {
 	background-color:#FFFFFF;

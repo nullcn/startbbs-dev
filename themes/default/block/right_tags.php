@@ -4,11 +4,11 @@
 </div>
 <div class='inner'>
 <?php if($taglist){?>
-<ul class="inline">
+<ul class="list_unstyled"">
 <?php foreach($taglist as $v){?>
-	<li class="tags"><a href="<?php echo site_url('tag/index/'.$v['tag_title']);?>"><?php echo $v['tag_title'];?></a></li>
-<?}?>
+	<span class="tags"><a href="<?php echo site_url('tag/index/'.$v['tag_title']);?>"><?php echo $v['tag_title'];?></a></span>
+<?php }?>
 </ul>
-<?}?>
+<?php }?>
 </div>
 </div>

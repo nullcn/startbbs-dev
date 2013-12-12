@@ -33,7 +33,7 @@ class Settings extends SB_Controller {
 			$data = array(
 				'uid' => $uid,
 				'email' => strip_tags($this->input->post('email')),
-				'homepage' => strip_tags($this->input->post('homepage')),
+				'homepage' => prep_url(strip_tags($this->input->post('homepage'))),
 				'location' => strip_tags($this->input->post('location')),
 				'qq' => strip_tags($this->input->post('qq')),
 				'signature' => strip_tags($this->input->post('signature')),
@@ -86,7 +86,7 @@ class Settings extends SB_Controller {
 			} else {
 				$data ['msg'] = '修改失败';
 			}
-			$this->load->view ( 'setting_password', $data );
+			$this->load->view ( 'settings_password', $data );
 		} else {
 			$this->load->view ( 'settings_password', $data );
 		}

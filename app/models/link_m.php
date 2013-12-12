@@ -3,7 +3,7 @@
 #doc
 #	classname:	Link_m
 #	scope:		PUBLIC
-#	StartBBSÆğµãÇáÁ¿¿ªÔ´ÉçÇøÏµÍ³
+#	StartBBSèµ·ç‚¹è½»é‡å¼€æºç¤¾åŒºç³»ç»Ÿ
 #	author :doudou QQ:858292510 startbbs@126.com
 #	Copyright (c) 2013 http://www.startbbs.com All rights reserved.
 #/doc
@@ -18,9 +18,11 @@ class Link_m extends SB_Model
 	}
 
 	/**/
-	public function get_latest_links($limit)
+	public function get_latest_links($limit='')
 	{
+		if($limit)
 		$this->db->limit($limit);
+		
 		$query = $this->db->get_where('links',array('is_hidden'=>0));
 		if($query->num_rows() > 0){
 			return $query->result_array();

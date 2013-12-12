@@ -1,36 +1,41 @@
-<div class="navbar navbar-inverse navbar-static-top navbar-fixed-top">
-<div class="navbar-inner">
+<div class="navbar navbar-inverse navbar-fixed-top">
 <div class="container">
-<a class="btn btn-navbar collapsed" data-target=".nav-collapse" data-toggle="collapse"><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></a><a href="<?php echo site_url()?>" class="brand">Start<span class="green">BBS</span></a>
-<div class="nav-collapse collapse">
-<ul class="nav pull-left">
-<li class=""><a href="<?php echo site_url()?>">首页</a></li>
-<li class=""><a href="<?php echo site_url('forum/add')?>">发表话题</a></li>
-</ul>
-<!--<form class="navbar-search pull-left" action="/home/search" method="get">
-<input class="search-query" data-domain="" id="q" maxlength="40" name="q" placeholder="输入关键字并回车" type="text" />
-</form>-->
-<form class="navbar-search pull-left" action="http://www.google.com/search" method="get" target="_blank">
-<input class="search-query" data-domain="" id="q" maxlength="40" name="q" placeholder="输入关键字并回车" type="text" />
-<input type=hidden name=ie value=UTF-8>
-<input type=hidden name=oe value=UTF-8>
-<input type=hidden name=hl value=zh-CN>
-<input type=hidden name=domains value="<?php echo $this->myclass->get_domain(site_url())?>">
-<input type=hidden name=sitesearch value="<?php echo $this->myclass->get_domain(site_url())?>">
-</form>
+	<div class="navbar-header">
+		<a class="navbar-brand" href="<?php echo site_url()?>">Start<span class="green">BBS</span></a>
+<!--<a class=".btn .btn-default navbar-btn collapsed" data-target=".navbar-collapse" data-toggle="collapse"><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></a><a href="<?php echo site_url()?>" class="brand">Start<span class="green">BBS</span></a>-->
+	</div>
 
-<ul class="nav pull-right">
-<?php if($this->session->userdata('uid')){ ?>
-<li class=""><a href="<?php echo site_url('user/info/'.$this->session->userdata('uid').'')?>"><?php echo $this->session->userdata('username');?></a></li>
-<li class=""><a href="<?php echo site_url('settings')?>"><i class="icon-th-list icon-white"></i> 个人设置</a></li>
-<?php if($this->auth->is_admin()){ ?>
-<li class=""><a href="<?php echo site_url('admin/login')?>">管理后台</a></li>
-<?php }?>
-<li><a href="<?php echo site_url('user/logout')?>" data-method="delete" rel="nofollow">退出</a></li>
-<?php }else{?>
-<li class=""><a href="<?php echo site_url('user/reg')?>">注册</a></li>
-<li class=""><a href="<?php echo site_url('user/login')?>">登入</a></li>
-<?php }?>
-</ul>
-</div></div></div></div>
+        <div class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li class="active"><a href="<?php echo site_url()?>" target=_blank>前台首页</a></li>
 
+            <!--<li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown <b class="caret"></b></a>
+              <ul class="dropdown-menu">
+                <li><a href="#">Action</a></li>
+                <li><a href="#">Another action</a></li>
+                <li><a href="#">Something else here</a></li>
+                <li class="divider"></li>
+                <li class="dropdown-header">Nav header</li>
+                <li><a href="#">Separated link</a></li>
+                <li><a href="#">One more separated link</a></li>
+              </ul>
+            </li>-->
+          </ul>
+          <ul class="nav navbar-nav navbar-right">
+	        <?php if($this->session->userdata('uid')){ ?>
+			<li><a href="<?php echo site_url('user/info/'.$this->session->userdata('uid').'')?>"><?php echo $this->session->userdata('username');?></a></li>
+			<li><a href="<?php echo site_url('settings')?>">个人设置</a></li>
+			<?php if($this->auth->is_admin()){ ?>
+			<li class=""><a href="<?php echo site_url('admin/login')?>">管理后台</a></li>
+			<?php }?>
+			<li><a href="<?php echo site_url('user/logout')?>" data-method="delete" rel="nofollow">退出</a></li>
+			<?php }else{?>
+            <li><a href="<?php echo site_url('user/reg')?>">注册</a></li>
+            <li><a href="<?php echo site_url('user/login')?>">登入</a></li>
+            <?php }?>
+          </ul>
+        </div><!--/.nav-collapse -->
+        
+</div>
+</div>

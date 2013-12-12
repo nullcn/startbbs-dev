@@ -9,9 +9,9 @@
  <body style="background: #fff;">
  <?php foreach($list as $key=>$v){?>
  <?php if(($key%2)==0){?>
-<div class='cell comment_header muted' style="margin: 5px 0;">
+<div class='cell comment_header text-muted' style="margin: 5px 0;">
 <?} else {?>
-<div class='cell muted'>
+<div class='cell text-muted'>
 <?}?>
 <div class='pull-right timeago'>
 <?php echo $this->myclass->friendly_date($v['addtime'])?>

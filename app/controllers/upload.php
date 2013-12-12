@@ -2,7 +2,7 @@
 #doc
 #	classname:	Home
 #	scope:		PUBLIC
-#	StartBBSÆðµãÇáÁ¿¿ªÔ´ÉçÇøÏµÍ³
+#	StartBBSèµ·ç‚¹è½»é‡å¼€æºç¤¾åŒºç³»ç»Ÿ
 #	author :doudou QQ:858292510 startbbs@126.com
 #	Copyright (c) 2013 http://www.startbbs.com All rights reserved.
 #/doc
@@ -11,17 +11,17 @@ class upload extends SB_Controller {
 
 	function __construct(){
 		parent::__construct();
-		$this->upload_path_temp = realpath(APPPATH . '../uploads/files/tmp');
-		$this->upload_path = realpath(APPPATH . '../uploads/files/');
-		$this->upload_path_url = base_url().'uploads/files/'.date('Ym').'/';
-		$this->path = $this->upload_path.'/'.date('Ym').'/';//ÕâÀïÊ¹ÓÃ¡°Äê-ÔÂ¡±¸ñÊ½£¬¿É¸ù¾ÝÐèÒª¸ÄÎª¡°Äê-ÔÂ-ÈÕ¡±¸ñÊ½
+		$this->upload_path_temp = FCPATH.'uploads/file/tmp';
+		$this->upload_path = FCPATH.'uploads/file/';
+		$this->upload_path_url = base_url().'uploads/file/'.date('Ym').'/';
+		$this->path = $this->upload_path.'/'.date('Ym').'/';//è¿™é‡Œä½¿ç”¨â€œå¹´-æœˆâ€æ ¼å¼ï¼Œå¯æ ¹æ®éœ€è¦æ”¹ä¸ºâ€œå¹´-æœˆ-æ—¥â€æ ¼å¼
 		if(!file_exists($this->path)){
 			mkdir($this->path,0777,true);
 		}
 	}
 	
-	function index() {
-		if ($this->input->post('submit')) {
+	function images() {
+		//if($this->input->post('submit')) {
 		$config = array(
 			'allowed_types' => 'jpg|jpeg|gif|png',
 			'upload_path' => $this->path,
@@ -30,7 +30,7 @@ class upload extends SB_Controller {
 		);
 		
 		$this->load->library('upload', $config);
-		if(!$this->upload->do_upload($this->input->post('userfile'))){
+		if(!$this->upload->do_upload($this->input->post('file'))){
 			$data['info'] = $this->upload->display_errors();
 			exit(json_encode($data));
 		} else {
@@ -38,14 +38,14 @@ class upload extends SB_Controller {
 			$upload_data = $this->upload->data();
 			
             $data['status'] = 'success';
-            $data['info']  = 'ÉÏ´«³É¹¦!';
+            $data['info']  = 'ä¸Šä¼ æˆåŠŸ!';
             $data['img']  = $upload_data['file_name'];
             
 			$config = array(
 				'source_image' => $upload_data['full_path'],
 				'maintain_ration' => true,
 			);
-			//Í¼Æ¬Ëõ·Å
+			//å›¾ç‰‡ç¼©æ”¾
 			$size = GetImageSize($config['source_image']);
 			if ( $size[0] >600){
 				$config['width'] = 600;
@@ -55,12 +55,14 @@ class upload extends SB_Controller {
 
 			$this->load->library('image_lib', $config);
 			$this->image_lib->resize();
+			//æŒ‡å®šçˆ¶é¡µé¢æŽ¥æ”¶ä¸Šä¼ æ–‡ä»¶åçš„å…ƒç´ id
+        $datas['result_field'] = 'up_name';
 
 			exit(json_encode($data));
 			
 		}
 
-		}
+		//}
 		
 	}
 	function get_images() {
@@ -68,6 +70,7 @@ class upload extends SB_Controller {
 		
 		//return $images;
 	}
+
 	
 //	function get_images() {
 //		
@@ -86,5 +89,42 @@ class upload extends SB_Controller {
 //		return $images;
 //	}
 	
-	
+
+	public function qiniu()
+	{
+		//å®šä¹‰å…è®¸ä¸Šä¼ çš„æ–‡ä»¶æ‰©å±•å
+		$ext_arr = array(
+			'image' => array('gif', 'jpg', 'jpeg', 'png','tiff'),
+			'media' => array('swf', 'flv', 'mp3', 'wav', 'wma', 'wmv', 'mid', 'avi', 'mpg', 'asf', 'rm', 'rmvb'),
+			'file' => array('doc', 'docx', 'xls', 'xlsx', 'ppt', 'htm', 'html', 'txt', 'zip', 'rar', 'gz', 'bz2'),
+		);
+		//èŽ·å¾—æ–‡ä»¶æ‰©å±•å
+		$info = pathinfo(@$_FILES['file']['name']);
+		$file_ext = @$info['extension'];
+		//æ–°æ–‡ä»¶å
+		$new_file_name = date("YmdHis") . '_' . rand(1, 99999) . '.' . $file_ext;
+		if(in_array($file_ext, $ext_arr['image']))
+		$file_path='uploads/image/'.$new_file_name;
+		if(in_array($file_ext, $ext_arr['media']))
+		$file_path='uploads/media/'.$new_file_name;
+		if(in_array($file_ext, $ext_arr['file']))
+		$file_path='uploads/file/'.$new_file_name;
+		$this->config->load('qiniu');
+		$params =array(
+			'accesskey'=>$this->config->item('accesskey'),
+			'secretkey'=>$this->config->item('secretkey'),
+			'bucket'=>$this->config->item('bucket'),
+			'file_domain'=>$this->config->item('file_domain').'/',	
+		);
+		$this->load->library('qiniu_lib',$params);
+		$new=$this->qiniu_lib->uploadfile(@$file_path);
+		if (!empty($_FILES)) {
+			echo json_encode($new);
+		}else{
+			$data['title'] = 'ä¸ƒç‰›ä¸Šä¼ å›¾ç‰‡æµ‹è¯•';
+			$this->load->view('qiniu_v',$data);
+		}
+	}
+
+
 }

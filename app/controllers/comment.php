@@ -30,7 +30,25 @@ class Comment extends SB_Controller
 			'uid' => $this->uid,
 			'replytime' => time()
 		);
-		
+		//数据返回
+		$query=$this->db->select('comments')->get_where('forums', array('fid'=>$data['fid']))->row_array();
+		$this->load->helper('format_content');
+		$callback = array(
+			'content' => stripslashes(format_content(filter_check($data['content']))),
+			'fid' => $data['fid'],
+			'uid' => $data['uid'],
+			'replytime' => $this->myclass->friendly_date($data['replytime']),
+			'username' => $this->input->post('username'),
+			'avatar' => $this->input->post('avatar'),
+			'layer' => @$query['comments']+1
+		);
+
+		echo json_encode($callback);
+		//无编辑器时的处理
+		//if($this->config->item('show_editor')=='off'){
+			$data['content'] = filter_check($data['content']);
+			$data['content'] = format_content($data['content']);
+		//}
 		//@会员功能
 		$comment= $data['content'];
 		$pattern = "/@([^@^\\s^:]{1,})([\\s\\:\\,\\;]{0,1})/";
@@ -54,13 +72,8 @@ class Comment extends SB_Controller
 			}
 		}
 		$data['content'] = str_replace( @$search, @$replace, $comment);
-		
-		//无编辑器时的处理
-		if($this->config->item('show_editor')=='off'){
-			$data['content'] = $this->filter_check($data['content']);
-			$this->load->helper('format_content');
-			$data['content'] = format_content($data['content']);
-		}
+
+		//入库
 		$this->load->model('comment_m');
 		$this->comment_m->add_comment($data);
 		//更新回复数,最后回复用户,最后回复时间,更新时间,ord时间
@@ -86,26 +99,11 @@ class Comment extends SB_Controller
 //		$this->load->library('myclass');
 //		$this->myclass->notice('window.history.go(-1);');
 	}
-
-
-
-		//无编辑器的过滤
-	private function filter_check ($data)
-	{
-		$pattern="/<pre>(.*?)<\/pre>/si";
-		preg_match_all ($pattern, $data, $matches);
-		foreach( $matches[1] as $val ){
-			@$replace [] =htmlspecialchars($val);
-		}
-		$data = str_replace($matches[1], @$replace, $data);
-		$data = nl2br($data);
-		return $data = strip_tags($data,"<a> <p> <font> <img> <b> <strong> <br> <pre> <br />");
-	}
 	
 	//删除回复
-	public function del($fid,$id)
+	public function del($cid,$fid,$id)
 	{
-		if($this->auth->is_admin()){
+		if($this->auth->is_admin() || $this->auth->is_master($cid)){
 			if($this->db->where('id',$id)->delete('comments')){
 				//更新贴子回复数
 				$this->db->set('comments','comments-1',FALSE)->where('fid',$fid)->update('forums');
@@ -115,7 +113,7 @@ class Comment extends SB_Controller
 				redirect('forum/view/'.$fid);
 			}
 		} else {
-			$this->myclass->notice('alert("非管理员不能操作");window.location.href="'.site_url('forum/view'.$fid).'";');
+			$this->myclass->notice('alert("非管理员或非本版块版主不能操作");window.location.href="'.site_url('forum/view/'.$fid).'";');
 		}
 
 	}

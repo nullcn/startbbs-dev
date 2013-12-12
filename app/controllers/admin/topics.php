@@ -90,6 +90,29 @@ class Topics extends Admin_Controller
 		}
 	}
 
+	public function batch_process()
+	{
+		$fids = array_slice($this->input->post(), 0, -1);
+		if($this->input->post('batch_del')){
+			if($this->db->where_in('fid',$fids)->delete('forums')){
+				$this->myclass->notice('alert("批量删除贴子成功！");window.location.href="'.site_url('admin/topics').'";');
+			}
+		}
+		if($this->input->post('batch_approve')){
+			if($this->db->where_in('fid',$fids)->update('forums', array('is_hidden'=>0))){
+				$this->myclass->notice('alert("批量审核贴子成功！");window.location.href="'.site_url('admin/topics').'";');
+			}
+		}
+	}
+
+	public function approve($fid)
+	{
+		if($this->db->where('fid',$fid)->update('forums', array('is_hidden'=>0))){
+			$this->myclass->notice('alert("审核贴子成功！");window.location.href="'.site_url('admin/topics').'";');
+		} else {
+			return false;
+		}
+	}
 
 	
 }

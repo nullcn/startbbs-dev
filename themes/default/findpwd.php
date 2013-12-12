@@ -12,12 +12,12 @@
 
 <div id="wrap">
 <div class="container" id="page-main">
-<div class="row-fluid">
-<div class='span8'>
+<div class="row">
+<div class='col-xs-12 col-sm-6 col-md-8'>
 
 <div class='box'>
 <div class='cell'>
-<a href="/" class="startbbs"><?php echo $settings['site_name']?></a> <span class="chevron">&nbsp;›&nbsp;</span> <?php echo $title?>
+<a href="<?php echo site_url()?>" class="startbbs"><?php echo $settings['site_name']?></a> <span class="chevron">&nbsp;›&nbsp;</span> <?php echo $title?>
 </div>
 <div class='inner'>
 <?php if(isset($_GET['p'])){?>
@@ -43,33 +43,30 @@
 <tr>
 <td class='left'></td>
 <td class='right'>
-<input class="btn btn-small" name="commit" type="submit" value="继续" />
+<input class="btn btn-sm" name="commit" type="submit" value="继续" />
 </td>
 </tr>
 </table>
 </form>
-<?} else {?>
+<?php } else {?>
 <form accept-charset="UTF-8" action="<?php echo site_url('/user/findpwd');?>" class="simple_form form-horizontal" id="new_user" method="post" novalidate="novalidate"><div style="margin:0;padding:0;display:inline"><input name="utf8" type="hidden" value="&#x2713;" /><input name="authenticity_token" type="hidden" value="8Ar00xN+IjHuI56XmZr2DVRC8A6b46N9e9nD+9HrwZo=" /></div>
-<div class="control-group string required"><label class="string required control-label" for="user_nickname">用户名</label><div class="controls"><input autofocus="autofocus" class="string required" id="user_nickname" name="username" size="50" type="text" /></div></div>
-<div class="control-group email optional"><label class="email optional control-label" for="user_email">注册邮箱</label><div class="controls"><input class="string email optional" id="user_email" name="email" size="50" type="email" value="" /></div></div>
+<div class="form-group string required"><label class="string required control-label" for="user_nickname">用户名</label><div class="controls"><input autofocus="autofocus" class="string required" id="user_nickname" name="username" size="50" type="text" /></div></div>
+<div class="form-group email optional"><label class="email optional control-label" for="user_email">注册邮箱</label><div class="controls"><input class="string email optional" id="user_email" name="email" size="50" type="email" value="" /></div></div>
 <div class='form-actions'>
-<input class="btn btn-small btn-primary" name="commit" type="submit" value="<?php echo $title;?>" />
+<input class="btn btn-sm btn-primary" name="commit" type="submit" value="<?php echo $title;?>" />
 <div class='additional'>
 24 小时内，至多可以<?php echo $title;?> 2 次。
 </div>
 </div>
 </form>
-<?}?>
+<?php }?>
 </div>
 </div>
 
 </div>
-<div class='span4' id='Rightbar'>
+<div class='col-xs-6 col-md-4' id='Rightbar'>
 <?php $this->load->view('block/right_login');?>
-
 <?php $this->load->view('block/right_ad');?>
-
-
 
 
 </div>

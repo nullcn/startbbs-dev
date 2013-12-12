@@ -11,16 +11,16 @@
 <div class="container" id="page-main">
 <div class="row">
 <?php $this->load->view('leftbar');?>
-<div class='span8'>
+<div class='col-xs-12 col-sm-6 col-md-9'>
 
 <div class='box'>
 <div class='cell'>
-<div class='fr'>
+<div class='pull-right'>
 <div class='btn-group'>
-<a href="<?php echo site_url('admin/page/add');?>" class="btn btn-small" data-remote="true">添加页面</a>
+<a href="<?php echo site_url('admin/page/add');?>" class="btn btn-primary btn-sm" data-remote="true">添加页面</a>
 </div>
 </div>
-<a href="/" class="startbbs1">StartBBS</a> <span class="chevron">&nbsp;›&nbsp;</span> <a href="<?php echo site_url('admin/');?>">管理后台</a> <span class="chevron">&nbsp;›&nbsp;</span> <?php echo $title?>
+<a href="<?php echo site_url()?>" class="startbbs1">StartBBS</a> <span class="chevron">&nbsp;›&nbsp;</span> <a href="<?php echo site_url('admin/login');?>">管理后台</a> <span class="chevron">&nbsp;›&nbsp;</span> <?php echo $title?>
 </div>
 <div class='cell'>
 <?php if($page_list){?>
@@ -48,12 +48,12 @@
 <td class='auto'>
 <?php echo $this->myclass->friendly_date($v['add_time']);?>
 </td>
-<td align='right' class='auto'>
-<small class='fade1'><?php if($v['is_hidden']==0){?>显示<?} else {?>隐藏<?}?></small>
+<td class='auto'>
+<small class='fade1'><?php if($v['is_hidden']==0){?>显示<?php } else {?>隐藏<?php }?></small>
 </td>
 <td class='w100'>
-<a href="<?php echo site_url('admin/page/edit/'.$v['pid']);?>" class="btn btn-small">编辑</a>
-<a href="<?php echo site_url('admin/page/del/'.$v['pid']);?>" class="btn btn-small btn-danger" data-confirm="真的要删除吗？" data-method="delete" rel="nofollow">删除</a>
+<a href="<?php echo site_url('admin/page/edit/'.$v['pid']);?>" class="btn btn-primary btn-sm">编辑</a>
+<a href="<?php echo site_url('admin/page/del/'.$v['pid']);?>" class="btn btn-sm btn-danger" data-confirm="真的要删除吗？" data-method="delete" rel="nofollow">删除</a>
 </td>
 </tr>
 <?php } ?>

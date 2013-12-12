@@ -2,7 +2,7 @@
 <meta charset='UTF-8'>
 <meta content='True' name='HandheldFriendly'>
 <meta content='width=device-width, initial-scale=1.0' name='viewport'>
-<title><?=$title?> - <?=$settings['site_name']?></title>
+<title><?php echo $title?> - <?php echo $settings['site_name']?></title>
 <?php $this->load->view ('header-meta');?>
 </head>
 
@@ -12,12 +12,12 @@
 
 <div id="wrap">
 <div class="container" id="page-main">
-<div class="row-fluid">
-<div class='span8'>
+<div class="row">
+<div class='col-xs-12 col-sm-6 col-md-8'>
 
 <div class='box'>
 <div class='cell'>
-<a href="/" class="startbbs"><?=$settings['site_name']?></a> <span class="chevron">&nbsp;›&nbsp;</span> 提醒系统(<?php echo $users['notices']?>)
+<a href="/" class="startbbs"><?php echo $settings['site_name']?></a> <span class="chevron">&nbsp;›&nbsp;</span> 提醒系统(<?php echo $users['notices']?>)
 </div>
 <?php if($notices_list){?>
 <?php foreach($notices_list as $v){?>
@@ -29,7 +29,7 @@
 <?php if($v['avatar']) {?>
 <img alt="<?php echo $v['username'];?> mini avatar" class="mini_avatar" src="<?php echo base_url($v['avatar']);?>" />
 <?php } else {?>
-<img alt="<?php echo $v['username'];?> mini avatar" class="mini_avatar" src="<?echo base_url('uploads/avatar/default.jpg');?>" />
+<img alt="<?php echo $v['username'];?> mini avatar" class="mini_avatar" src="<?php echo base_url('uploads/avatar/default.jpg');?>" />
 <?php }?>
 </a>
 </td>
@@ -39,12 +39,12 @@
 <?php if($v['ntype']==0){?>
 回复了你的贴子
 <a href="<?php echo site_url('forum/view/'.$v['fid']);?>" class="startbbs"><?php echo $v['title'];?>...</a>
-<?}?>
+<?php }?>
 <?php if($v['ntype']==1){?>
 在回复
 <a href="<?php echo site_url('forum/view/'.$v['fid']);?>" class="startbbs"><?php echo $v['title'];?>...</a>
 时提到了@你
-<?}?>
+<?php }?>
 </span>
 <span class='snow'>
 <?php echo $this->myclass->friendly_date($v['ntime']);?>
@@ -55,13 +55,13 @@
 </tr>
 </table>
 </div>
-<?}?>
-<?} else{?>
+<?php }?>
+<?php } else{?>
 <div class='cell'>暂无提醒</div>
-<?}?>
+<?php }?>
 </div>
 </div>
-<div class='span4' id='Rightbar'>
+<div class='col-xs-6 col-md-4' id='Rightbar'>
 <?php $this->load->view('block/right_login');?>
 
 <?php $this->load->view('block/right_ad');?>

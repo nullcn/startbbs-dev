@@ -1,35 +1,27 @@
-
 			KindEditor.ready(function(K) {
-				var editor = K.editor({
-					allowFileManager : true
+				var uploadbutton = K.uploadbutton({
+					button : K('#upload-tip')[0],
+					fieldName : 'imgFile',
+					url :baseurl+'/plugins/kindeditor/php/upload_json.php?dir=mix',
+					afterUpload : function(data) {
+						if (data.error === 0) {
+							var url = K.formatUrl(data.url, 'absolute');
+							//url=url.replace('/upload','upload'); 
+							var addString = baseurl+url +'\n';
+							var textareaContain = $("#textContain textarea").eq(0);
+							K('#textContain textarea').val(textareaContain.val()+addString);
+							//$("#test").append(addString);
+
+
+						} else {
+							alert(data.message);
+						}
+					},
+					afterError : function(str) {
+						alert('自定义错误信息: ' + str);
+					}
 				});
-				K('#upload-tip').click(function() {
-					editor.loadPlugin('multiimage', function() {
-						editor.plugin.multiImageDialog({
-							clickFn : function(urlList) {
-								var textareaContain = $("#textContain textarea").eq(0);
-								K.each(urlList, function(i, data) {
-									data.url=data.url.replace('/upload','upload'); 
-									var addString = baseurl + data.url +'\n';
-									textareaContain.val(textareaContain.val()+addString);
-								});
-								editor.hideDialog();
-							}
-						});
-					});
+				uploadbutton.fileBox.change(function(e) {
+					uploadbutton.submit();
 				});
-//				//插入代码
-//				K('#insert_code').click(function() {
-//					editor.loadPlugin('code', function() {
-//						editor.plugin.codeDialog({
-//							clickFn : function(body) {
-//									var textareaContain = $("#textContain textarea").eq(0);
-//									var addString = body+'\n';
-//									textareaContain.val(textareaContain.val()+addString);
-//								editor.hideDialog();
-//							}
-//						});
-//					});
-//				});
-				
 			});

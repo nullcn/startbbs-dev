@@ -6,7 +6,7 @@
 <div class="infolist">
 <ul>
 <?php foreach($related_forum_list as $v){?>
-<li><a href="<?php echo site_url('forum/view/'.$v['fid']);?>" class="muted"><?php echo sb_substr($v['title'],20)?></a></li>
+<li><a href="<?php echo site_url('forum/view/'.$v['fid']);?>" class="text-muted"><?php echo sb_substr($v['title'],20)?></a></li>
 <?php }?>
 </ul>
 </div>

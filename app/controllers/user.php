@@ -17,6 +17,14 @@ class User extends SB_Controller
 		$this->load->library('myclass');
 
 	}
+
+	public function index()
+	{
+		$data['title'] = '用户';
+		$data['new_users'] = $this->user_m->get_users(33,'new');
+		$data['hot_users'] = $this->user_m->get_users(33,'hot');		
+		$this->load->view('user',$data);
+	}
 	public function info ($uid)
 	{
 		$data = $this->user_m->get_user_by_id($uid);
@@ -32,7 +40,7 @@ class User extends SB_Controller
 		//是否被关注
 		$this->load->model('follow_m');
 		$data['is_followed'] = $this->follow_m->follow_user_check($this->session->userdata('uid'), $uid);
-		
+
 		$this->load->view('userinfo', $data);
 		
 	}
@@ -48,14 +56,16 @@ class User extends SB_Controller
 			exit;
 		}
 		if($_POST && $this->validate_reg_form()){
+			$password = $this->input->post('password',true);
 			$ip = $this->myclass->get_ip();
 			$data = array(
 				'username' => strip_tags($this->input->post('username')),
-				'password' => md5($this->input->post('password',true)),
+				'password' => md5($password),				
 				'openid' => strip_tags($this->input->post('openid')),
 				'email' => $this->input->post('email',true),
 				'ip' => $ip,
-				'gid' => 1,
+				'group_type' => 2,
+				'gid' => 3,
 				'regtime' => time(),
 				'is_active' => 1
 			);
@@ -66,14 +76,14 @@ class User extends SB_Controller
 				$this->myclass->notice('alert("邮箱已注册，请换一个邮箱！");history.back();');
 			} elseif(!empty($check_username)){
 				$this->myclass->notice('alert("用户名已存在!!");history.back();');
-				} elseif(md5($this->input->post('password_c'))!=$data['password']){
+				} elseif($this->input->post('password_c')!=$password){
 					$this->myclass->notice('alert("密码输入不一致!!");history.back();');
 				} elseif($this->config->item('show_captcha')=='on' && $this->session->userdata('yzm')!=$captcha) {
 					$this->myclass->notice('alert("验证码不正确!!");history.back();');
 				} else {
 					if($this->user_m->reg($data)){
 						$uid = $this->db->insert_id();
-						$this->session->set_userdata(array ('uid' => $uid, 'username' => $data['username'], 'password' =>$data['password'], 'gid' => $data['gid']) );
+						$this->session->set_userdata(array ('uid' => $uid, 'username' => $data['username'], 'password' =>$data['password'], 'group_type' => $data['group_type'], 'gid' => $data['gid']) );
 						//去除session
 						$this->session->unset_userdata('yzm');
 					}
@@ -131,44 +141,12 @@ class User extends SB_Controller
 			$user = $this->user_m->check_login($username, $password);
 			$captcha = $this->input->post('captcha_code');
 			if($this->config->item('show_captcha')=='on' && $this->session->userdata('yzm')!=$captcha) {
-				$this->myclass->notice('alert("验证码不正确!!");history.go(0);');
+				$this->myclass->notice('alert("验证码不正确!!");history.go(-1);');
 			} elseif(count($user)){
 				//更新session
-				$this->session->set_userdata(array ('uid' => $user['uid'], 'username' => $user['username'], 'password' =>$user['password'], 'gid' => $user['gid']) );
-				//设置cookie
-				$cookie = array(
-                   'name'   => 'uid',
-                   'value'  => $user['uid'],
-                   'expire' => '86400',
-                   'domain' => '.'.$this->myclass->get_domain(site_url()),
-                   'path'   => '/'
-               );
-               
-	            $this->input->set_cookie($cookie);
-	            $cookie = array(
-	                'name'   => 'username',
-	                'value'  => $user['username'],
-	                'expire' => '86400',
-	                'domain' => '.'.$this->myclass->get_domain(site_url()),
-	                'path'   => '/'
-	            );
-            	$this->input->set_cookie($cookie);
-	            $cookie = array(
-	                'name'   => 'password',
-	                'value'  => $user['password'],
-	                'expire' => '86400',
-	                'domain' => '.'.$this->myclass->get_domain(site_url()),
-	                'path'   => '/'
-	            );
-            	$this->input->set_cookie($cookie);
-	            $cookie = array(
-	                'name'   => 'gid',
-	                'value'  => $user['gid'],
-	                'expire' => '86400',
-	                'domain' => '.'.$this->myclass->get_domain(site_url()),
-	                'path'   => '/'
-	            );
-            	$this->input->set_cookie($cookie);
+				$this->session->set_userdata(array ('uid' => $user['uid'], 'username' => $user['username'], 'password' =>$user['password'], 'group_type' => $user['group_type'], 'gid' => $user['gid']) );
+				//设置cookie(已去除)
+
 	            //更新openidQQ
 				$openid = strip_tags($this->input->post('openid'));
 				if($openid){
@@ -195,6 +173,7 @@ class User extends SB_Controller
 		delete_cookie('uid');
 		delete_cookie('username');
 		delete_cookie('password');
+		delete_cookie('group_type');
 		delete_cookie('gid');
 		delete_cookie('openid');
 		
@@ -209,33 +188,12 @@ class User extends SB_Controller
 			$username = $this->input->post('username');
 			$data = $this->user_m->getpwd_by_username($username);
 			if(@$data['email']==$this->input->post('email')){
-
-//           $config['protocol'] = 'sendmail';
-//$config['charset'] = 'utf8';
-//$config['wordwrap'] = TRUE;
-// $config['mailtype'] = 'text';
-//$this->load->library('email',$config);
-
- 
-				$config['protocol']=$this->config->item('protocol');
-				$config['smtp_host']=$this->config->item('smtp_host');
-				$config['smtp_user']=$this->config->item('smtp_user');
-				$config['smtp_pass']=$this->config->item('smtp_pass');
-				$config['smtp_port']=$this->config->item('smtp_port');
-				$config['charset'] = 'utf-8';
-				$config['wordwrap'] = TRUE;
-				$config['mailtype'] = 'html';
-				$this->load->library('email',$config);
 				$x = md5($username.'+').@$data['password'];
 				$string = base64_encode($username.".".$x);
-				
-				$this->email->from($config['smtp_user'],'startbbs');
-				$this->email->to($this->input->post('email'));
-				$this->email->subject('重置密码-'.$this->config->item('site_name'));
+				$subject ='重置密码';
 				$message = '尊敬的用户'.$username.':<br/>你使用了本站提供的密码找回功能，如果你确认此密码找回功能是你启用的，请点击下面的链接，按流程进行密码重设。<br/><a href="'.site_url("user/resetpwd?p=").$string.'">'.site_url('user/reset_pwd?p=').$string.'</a><br/>如果不能打开链接，请复制链接到浏览器中。<br/>如果本次密码重设请求不是由你发起，你可以安全地忽略本邮件。';
-				$this->email->message($message);
-				if($this->email->send()){
-					$data['msg'] = '密码重置链接已经发到您邮箱:'.$data['email'].',请注意查收！';
+			if(send_mail($username,@$data['password'],$this->input->post('email'),$subject,$message)){
+				$data['msg'] = '密码重置链接已经发到您邮箱:'.$data['email'].',请注意查收！';
 				}else{
 					$data['msg'] = '没有发送成功';
 				}
@@ -262,9 +220,9 @@ class User extends SB_Controller
 			
 		if(@$array['1'] === $checkCode ){
 			if($_POST){
-				$password = md5($this->input->post('password'));
+				$password = $this->input->post('password');
 				if($this->user_m->update_user(@$data['uid'], array('password'=>$password))){
-					$this->session->set_userdata(array ('uid' => $data['uid'], 'username' => $array['0'],'password' => $password, 'gid' => $data['gid']));
+					$this->session->set_userdata(array ('uid' => $data['uid'], 'username' => $array['0'],'password' => $password, 'group_type' => $data['group_type'], 'gid' => $data['gid']));
 					redirect('/');
 				}
 			}

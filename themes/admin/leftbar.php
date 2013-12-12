@@ -1,4 +1,4 @@
-<div class='span2'>
+<div class='col-xs-6 col-md-3'>
 <div class='box fix_cell'>
 <div class='cell'>
 <strong class='gray'>社区管理</strong>
@@ -21,7 +21,7 @@ Settings
 <div class='cell'>
 Users
 &nbsp;
-<a href="<?php echo site_url('admin/users');?>">用户</a>
+<a href="<?php echo site_url('admin/users/index');?>">用户</a>
 </div>
 <div class='cell'>
 Nodes
@@ -42,6 +42,11 @@ Links
 Page
 &nbsp;
 <a href="<?php echo site_url('admin/page');?>">单页面</a>
+</div>
+<div class='cell'>
+DbAdmin
+&nbsp;
+<a href="<?php echo site_url('admin/db_admin/index');?>">数据库管理</a>
 </div>
 <!--<div class='cell'>
 <img align="absmiddle" alt="Pages" src="/assets/admin/pages-35f97f71adb2980521de5cb0e3c65c14.png" valign="middle" />

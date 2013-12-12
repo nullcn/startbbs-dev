@@ -2,7 +2,7 @@
 #doc
 #	classname:	Comment_m
 #	scope:		PUBLIC
-#	StartBBSÆğµãÇáÁ¿¿ªÔ´ÉçÇøÏµÍ³
+#	StartBBSèµ·ç‚¹è½»é‡å¼€æºç¤¾åŒºç³»ç»Ÿ
 #	author :doudou QQ:858292510 startbbs@126.com
 #	Copyright (c) 2013 http://www.startbbs.com All rights reserved.
 #/doc
@@ -35,7 +35,7 @@ class Upload_m extends SB_Model {
 
 	
 	/**
-	 * ÉèÖÃÄ¿Â¼
+	 * è®¾ç½®ç›®å½•
 	 * @param int $uid
 	 */
 	function get_dir($uid) {
@@ -73,7 +73,7 @@ class Upload_m extends SB_Model {
 			$this->resizeimg($image_data_temp['full_path'],100,100,'big');
 			$this->resizeimg($image_data_temp['full_path'],48,48,'middle');
 			$this->resizeimg($image_data_temp['full_path'],24,24,'small');
-			//É¾³ıÔ­Í¼
+			//åˆ é™¤åŸå›¾
 			unlink($image_data_temp['full_path']);
 			return true;
 		}

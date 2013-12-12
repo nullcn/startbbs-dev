@@ -3,7 +3,7 @@
 #doc
 #	classname:	User_m
 #	scope:		PUBLIC
-#	StartBBSÆğµãÇáÁ¿¿ªÔ´ÉçÇøÏµÍ³
+#	StartBBSèµ·ç‚¹è½»é‡å¼€æºç¤¾åŒºç³»ç»Ÿ
 #	author :doudou QQ:858292510 startbbs@126.com
 #	Copyright (c) 2013 http://www.startbbs.com All rights reserved.
 #/doc
@@ -28,12 +28,15 @@ class User_m extends SB_Model
         return $query->row_array();
 	}
 	function check_login($username,$password){
-		$query = $this->db->get_where('users',array('username'=>$username, 'password'=>md5($password)));
-		$result = $query->row_array();
-		if(@$result['uid']){
-			$this->db->where('uid', @$result['uid'])->update('users',array('lastlogin'=>time()));
+		$query = $this->check_username($username);
+		$password = md5($password);
+		if($query['password']==$password){
+			$this->db->where('uid', @$query['uid'])->update('users',array('lastlogin'=>time()));
+			return $query;
+		} else {
+			return false;
 		}
-		return $result;
+		
 	}
 	public function get_user_by_id($uid)
 	{
@@ -68,17 +71,23 @@ class User_m extends SB_Model
 			return $query->result_array();
 		}
 	}
-	public function get_new_users($limit)
+	public function get_users($limit,$ord)
 	{
 		$this->db->select('uid,username,avatar');
 		$this->db->from('users');
-		$this->db->order_by('uid','desc');
+		if($ord=='new'){
+			$this->db->order_by('uid','desc');	
+		}
+		if($ord=='hot'){
+			$this->db->order_by('lastlogin','desc');	
+		}
 		$this->db->limit($limit);
 		$query = $this->db->get();
 		if($query->num_rows() > 0){
 			return $query->result_array();
 		}
 	}
+	
 	public function is_user($uid)
 	{
 		return ($this->auth->is_login() && $uid==$this->session->userdata('uid')) ? TRUE : FALSE;
@@ -94,9 +103,13 @@ class User_m extends SB_Model
 
 	public function getpwd_by_username($username)
 	{
-		$query = $this->db->select('uid,email,password,gid')->get_where('users', array('username'=>$username));
+		$query = $this->db->select('uid,email,password,group_type')->get_where('users', array('username'=>$username));
 		return $query->row_array();
 	}
-	
+		public function get_user_by_username($username)
+	{
+		$query = $this->db->limit(1)->get_where('users', array('username'=>$username));
+		return $query->result_array();
+	}
 
 }

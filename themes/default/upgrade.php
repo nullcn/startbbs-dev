@@ -5,23 +5,25 @@
 <meta charset='UTF-8'>
 <meta content='True' name='HandheldFriendly'>
 <meta content='width=device-width, initial-scale=1.0' name='viewport'>
-<title>升级 - 管理后台 - Rabel</title>
+<title>升级 - 管理后台 - Startbbs开源轻量社区系统</title>
 <?php $this->load->view ( 'header-meta' ); ?>
 <script type="text/javascript">
 $(document).ready(function() {
 	$("#do_upgrade").click(function(){
     $.ajax({
 		type:"GET",
-		url:"/upgrade/do_upgrade",
+		url:"<?php echo site_url()?>/upgrade/do_upgrade",
 		dataType: "json",
 		success: function(data){
 				var msg=data.success;
-				$("#result1").append(data.msg1).fadeIn();
-				$("#result2").append(data.msg2).fadeIn(2000);
-				$("#result_v").append(data.msg_v).fadeIn(6000);
-				$("#finish").append(data.finish).fadeIn(10000);
-				$("#do_upgrade").fadeOut(2000);
-				$("#home").fadeIn(2000);
+				$("#result_1").append(data.msg_1).fadeIn(2000);
+				$("#result_2").append(data.msg_2).fadeIn(3000);
+				$("#result_v").append(data.msg_v).fadeIn(4000);
+				//$("#result_del").append(data.msg_del).fadeIn(5000);
+				$("#result_error").append(data.msg_error).fadeIn(6000);
+				$("#done").append(data.msg_done).fadeIn(7000);
+				$("#do_upgrade").fadeOut(8000);
+				$("#home").fadeIn(9000);
 		}
 	})
 });
@@ -39,7 +41,6 @@ $(document).ready(function() {
 </form>
 <ul class="nav pull-right">
 <li class=""><a href="http://www.startbbs.com">Startbbs官方</a></li>
-
 </ul>
 </div></div></div></div>
 
@@ -49,10 +50,10 @@ $(document).ready(function() {
 <div class="row">
 
 
-<div class='span8'>
+<div class='col-xs-12 col-sm-12 col-md-12'>
 
 <div class='row'>
-<div class='box span10'>
+<div class='box col-md-12'>
 <div class='cell'>
 欢迎进入startbbs社区升级系统
 </div>
@@ -68,21 +69,25 @@ $(document).ready(function() {
 <?php if($new_version!=$old_version){?>
 <form action="<?php echo site_url('install/step');?>" class="form-horizontal" method="post" id="dbform">
 <div class='row'>
-<div class='box span10'>
+<div class='box col-md-12'>
 <div class='cell'>
 系统升级 <?php echo $old_version;?> - <?php echo $new_version;?>
 </div>
 <div class='inner'>
-<div class='control-group'>
+<div class='form-group'>
     <dl class="dl-horizontal">
     <dt>升级数据库:<?php echo $this->db->database;?></dt>
-    <dd id="result1" style="display:none" class="green"></dd>
+    <dd id="result_1" style="display:none" class="green"></dd>
     <dt></dt>
-    <dd id="result2" style="display:none" class="green"></dd>
+    <dd id="result_2" style="display:none" class="green"></dd>
     <dt></dt>
     <dd id="result_v" style="display:none" class="green"></dd>
+    <!--<dt></dt>
+    <dd id="result_del" style="display:none" class="green"></dd>-->
     <dt></dt>
-    <dd id="finish" style="display:none" class="red"></dd>
+    <dd id="result_error" style="display:none" class="red"></dd>
+    <dt></dt>
+    <dd id="done" style="display:none" class="red"></dd>
     </dl>
 </div>
 <div class='form-actions'>
@@ -108,13 +113,13 @@ $(document).ready(function() {
 <li><a href="/page/support" class="dark nav">技术支持</a></li>-->
 </ul>
 <div class='copywrite'>
-<div class="fr"> <!--<a href="" target="_blank"><img src="" border="0" alt="Linode" width="120"></a>--></div>
+<div class="pull-right"> <!--<a href="" target="_blank"><img src="" border="0" alt="Linode" width="120"></a>--></div>
 <p>&copy; 2013 Startbbs Inc, Some rights reserved.</p>
 </div>
-<small class='muted'>
+<small class='text-muted'>
 Powered by
-<a href="http://www.startbbs.com" class="muted" target="_blank">StartBBS</a>
-<?=$this->config->item('version');?>
+<a href="<?php echo $this->config->item('sys_url');?>" class="text-muted" target="_blank"><?php echo $this->config->item('sys_name');?></a>
+<?php echo $this->config->item('sys_version');?>
 </small>
 </div>
 </div>

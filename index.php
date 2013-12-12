@@ -1,8 +1,8 @@
 <?php
-
+header('Content-Type: text/html; charset=utf-8');//å¼ºåˆ¶è¾“å‡ºutf8
 /*
  *---------------------------------------------------------------
- * Ó¦ÓÃ»·¾³
+ * åº”ç”¨çŽ¯å¢ƒ
  *---------------------------------------------------------------
  *
  * You can load different configurations depending on your
@@ -21,7 +21,7 @@
 	define('ENVIRONMENT', 'development');
 /*
  *---------------------------------------------------------------
- * ´íÎó±¨¸æ
+ * é”™è¯¯æŠ¥å‘Š
  *---------------------------------------------------------------
  *
  * Different environments will require different levels of error reporting.
@@ -35,7 +35,7 @@ if (defined('ENVIRONMENT'))
 		case 'development':
 			error_reporting(E_ALL);
 		break;
-	
+
 		case 'testing':
 		case 'production':
 			error_reporting(0);
@@ -48,7 +48,7 @@ if (defined('ENVIRONMENT'))
 
 /*
  *---------------------------------------------------------------
- * ÏµÍ³ÎÄ¼þ¼Ð
+ * ç³»ç»Ÿæ–‡ä»¶å¤¹
  *---------------------------------------------------------------
  *
  * This variable must contain the name of your "system" folder.
@@ -60,7 +60,7 @@ if (defined('ENVIRONMENT'))
 
 /*
  *---------------------------------------------------------------
- * Ó¦ÓÃÎÄ¼þ¼Ð
+ * åº”ç”¨æ–‡ä»¶å¤¹
  *---------------------------------------------------------------
  *
  * If you want this front controller to use a different "application"
@@ -199,7 +199,8 @@ if (defined('ENVIRONMENT'))
  * And away we go...
  *
  */
-require_once BASEPATH.'core/Startbbs.php';
+require_once BASEPATH.'core/CodeIgniter.php';
+date_default_timezone_set("Asia/Shanghai");
 
 /* End of file index.php */
 /* Location: ./index.php */

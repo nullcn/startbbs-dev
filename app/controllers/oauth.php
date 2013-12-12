@@ -41,15 +41,15 @@ class Oauth extends SB_Controller {
 		if(empty($open_id)){
 			$this->myclass->notice('alert("QQ一键登录授权失败，请采用普通方式注册和登录！");window.location.href="'.site_url().'";');	
 		} else {
-			$user = $this->db->select('uid,username,password,openid,gid')->from('users')->where('openid', $open_id)->limit(1)->get()->row_array();
+			$user = $this->db->select('uid,username,password,openid,group_type,gid')->from('users')->where('openid', $open_id)->limit(1)->get()->row_array();
 			if($user){
-				$this->session->set_userdata(array ('uid' => $user['uid'], 'username' => $user['username'],'password' => $user['password'], 'gid' => $user['gid']));
+				$this->session->set_userdata(array ('uid' => $user['uid'], 'username' => $user['username'],'password' => $user['password'], 'group_type' => $user['group_type'], 'gid' => $user['gid']));
 				redirect('/');
 			} elseif(!$this->check_username($arr['user']['username'])){
-				$userinfo = array('username'=>$arr['user']['username'],'openid'=>$open_id, 'ip'=>$this->myclass->get_ip(),'gid'=>1, 'regtime'=>time(), 'is_active'=>1);
+				$userinfo = array('username'=>$arr['user']['username'],'openid'=>$open_id, 'ip'=>$this->myclass->get_ip(),'group_type'=>2,'gid'=>3, 'regtime'=>time(), 'is_active'=>1);
 				$this->user_m->reg($userinfo);
 				$uid = $this->db->insert_id();
-				$this->session->set_userdata(array ('uid' => $uid, 'username' => $userinfo['username'],'openid' => $userinfo['openid'], 'gid' => $userinfo['gid']) );
+				$this->session->set_userdata(array ('uid' => $uid, 'username' => $userinfo['username'],'openid' => $userinfo['openid'], 'group_type' => $userinfo['group_type'], 'gid' => $userinfo['gid']) );
 				redirect('/');
 			} else{
 				if($_POST && $this->validate_qqlogin_form()) {
@@ -60,13 +60,14 @@ class Oauth extends SB_Controller {
 						'email' => $this->input->post('email',true),
 						'openid' => $open_id,
 						'ip' => $ip,
-						'gid' => 1,
+						'group_type' => 2,
+						'gid' => 3,
 						'regtime' => time(),
 						'is_active' => 1
 					);
 					if($this->user_m->reg($data)){
 						$uid = $this->db->insert_id();
-						$this->session->set_userdata(array ('uid' => $uid, 'username' => $data['username'], 'password' =>$data['password'],'gid' => $data['gid']) );
+						$this->session->set_userdata(array ('uid' => $uid, 'username' => $data['username'], 'password' =>$data['password'],'group_type' => $data['group_type'],'gid' => $data['gid']) );
 						redirect('/');	
 					}
 				}

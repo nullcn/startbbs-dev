@@ -16,6 +16,7 @@ class Install extends Install_Controller
 		$file=FCPATH.'install.lock';
 		if (file_exists($file)){
 			$this->myclass->notice('alert("系统已安装过");window.location.href="'.site_url().'";');
+			exit;
 		}
 
 	}
@@ -64,7 +65,7 @@ class Install extends Install_Controller
 
 				}
 					$sql = file_get_contents(FCPATH.'app/config/startbbs.sql');
-					$sql = str_replace("sb_",$dbprefix,$sql);
+					$sql = str_replace("stb_",$dbprefix,$sql);
 					$explode = explode(";",$sql);
 					$data['msg1']="创建表".$dbname."成功，请稍后……<br/>";
 				 	foreach ($explode as $key=>$value){
@@ -160,7 +161,7 @@ class Install extends Install_Controller
 		$files_writeble[] = FCPATH . 'data/backup/';
 		$files_writeble[] = FCPATH . 'uploads/';
 		$files_writeble[] = FCPATH . 'uploads/avatar/';
-		$files_writeble[] = FCPATH . 'uploads/avatar/tmp';
+		$files_writeble[] = FCPATH . 'uploads/avatar/tmp/';
 		$files_writeble[] = FCPATH . 'uploads/files/';
 		$files_writeble[] = FCPATH . 'uploads/image/';
 		

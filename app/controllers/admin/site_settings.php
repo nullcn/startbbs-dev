@@ -69,6 +69,7 @@ class Site_settings extends Admin_Controller
 			$topicset['comment_order']=($this->input->post('comment_order')=='asc')?'asc':'desc';
 			$topicset['is_approve']=($this->input->post('is_approve')=='on')?'on':'off';
 			$topicset['per_page_num']=($this->input->post('per_page_num'))?$this->input->post('per_page_num'):'10';
+			$topicset['home_page_num']=($this->input->post('home_page_num'))?$this->input->post('home_page_num'):'20';
 			$topicset['timespan']=($this->input->post('timespan'))?$this->input->post('timespan'):'0';
 			$topicset['words_limit']=($this->input->post('words_limit'))?$this->input->post('words_limit'):'5000';
 			$this->config->set_item('topicset', $topicset);
@@ -121,7 +122,7 @@ class Site_settings extends Admin_Controller
 			$this->config->update('qiniu','accesskey', $this->input->post('accesskey'));
 			$this->config->update('qiniu','secretkey', $this->input->post('secretkey'));
 			$this->config->update('qiniu','bucket', $this->input->post('bucket'));
-			$this->config->update('qiniu','file_domain', $this->input->post('file_domain'));
+			$this->config->update('qiniu','file_domain', prep_url($this->input->post('file_domain')));
 			$this->myclass->notice('alert("存储配置更新成功");window.location.href="'.site_url('admin/site_settings').'";');
 		}
 

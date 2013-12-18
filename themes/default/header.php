@@ -1,6 +1,13 @@
-<div class="navbar <?php if($this->config->item('static')=='default'){?>navbar-inverse<?php } else{?>navbar-default<?php }?> navbar-fixed-top">
+<div id="navbar-wrapper">
+<div  id="navigation" class="navbar <?php if($this->config->item('static')=='default'){?>navbar-inverse<?php } else{?>navbar-default<?php }?> navbar-fixed-top">
 <div class="container">
+
 	<div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
 		<a class="navbar-brand" href="<?php echo site_url()?>"><?php echo $settings['logo'];?></a>
 <!--<a class=".btn .btn-default navbar-btn collapsed" data-target=".navbar-collapse" data-toggle="collapse"><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></a><a href="<?php echo site_url()?>" class="brand">Start<span class="green">BBS</span></a>-->
 	</div>
@@ -41,6 +48,7 @@
 			<?php }else{?>
             <li><a href="<?php echo site_url('user/reg')?>">注册</a></li>
             <li><a href="<?php echo site_url('user/login')?>">登入</a></li>
+            <li><a style="padding-top: 11px;overflow:hidden;" href="<?php echo site_url("qq_login")?>"><img src="<?php echo base_url("static/common/images/qq_login.png");?>" /></a></li>
             <?php }?>
           </ul>
         </div><!--/.nav-collapse -->
@@ -48,3 +56,4 @@
 </div>
 </div>
 
+</div>

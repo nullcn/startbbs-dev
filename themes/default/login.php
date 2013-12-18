@@ -56,6 +56,7 @@ function reloadcode() {//刷新验证码函数
 <div class='form-group'>
 	<div class="col-sm-offset-3 col-sm-9">
 		<button type="submit" name="commit" class="btn btn-primary">登入</button>
+		<a href="<?php echo site_url('user/findpwd');?>" class="btn btn-default" role="button">找回密码</a>
 	</div>
 </div>
 
@@ -64,7 +65,7 @@ function reloadcode() {//刷新验证码函数
 </div>
 
 </div>
-<div class='col-xs-6 col-md-4' id='Rightbar'>
+<div class='col-xs-12 col-sm-6 col-md-4' id='Rightbar'>
 
 <?php $this->load->view('block/right_login');?>
 <?php $this->load->view('block/right_ad');?>

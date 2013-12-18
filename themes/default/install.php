@@ -145,7 +145,7 @@
 <div id="wrap">
 <div class="container" id="page-main">
 <div class="row">
-<div class='col-sm-6 col-md-4'>
+<div class='col-xs-12 col-sm-6 col-md-4'>
 <div class='box fix_cell'>
 <div class='cell'>
 <strong class='gray'>安装步骤</strong>
@@ -252,7 +252,7 @@
 
 <div class='form-group'>
 <label class="control-label" for="settings_site_name">数据表前缀</label>
-<input id="txtPrefix" class="form-control" name="dbprefix" type="text" value="sb_" />
+<input id="txtPrefix" class="form-control" name="dbprefix" type="text" value="stb_" />
 <small class='help-inline' id="infoPrefix">不建议修改</small>
 </div>
 
